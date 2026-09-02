@@ -156,19 +156,27 @@ class PowerAppsYamlValidatorUI:
         return """
 <style>
 .pav-workspace {
-  --pav-bg: #faf9f8;
+  color-scheme: light;
+  --pav-bg: #f5f5f5;
   --pav-surface: #ffffff;
-  --pav-border: #d2d0ce;
-  --pav-text: #242424;
-  --pav-muted: #605e5c;
-  --pav-primary: #0078d4;
+  --pav-surface-hover: #f0f6fc;
+  --pav-border: #8a8886;
+  --pav-border-subtle: #d1d1d1;
+  --pav-text: #161616;
+  --pav-muted: #4a4a4a;
+  --pav-primary: #0f6cbd;
+  --pav-primary-hover: #115ea3;
   --pav-primary-text: #ffffff;
-  --pav-error: #a4262c;
-  --pav-warning: #8a6914;
+  --pav-error: #b10e1c;
+  --pav-warning: #765000;
   --pav-info: #005a9e;
-  --pav-code-bg: #f3f2f1;
-  --pav-focus: #0078d4;
+  --pav-success: #0b6a0b;
+  --pav-code-bg: #f7f7f7;
+  --pav-focus: #0f6cbd;
+  --pav-disabled-bg: #e6e6e6;
+  --pav-disabled-text: #6b6b6b;
   width: min(100% - 24px, 1280px) !important;
+  max-height: min(780px, calc(100vh - 32px)) !important;
   margin: 12px auto !important;
   padding: 20px 24px !important;
   border: 1px solid var(--pav-border) !important;
@@ -177,17 +185,36 @@ class PowerAppsYamlValidatorUI:
   color: var(--pav-text) !important;
   font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif !important;
   box-sizing: border-box !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
 }
 @media (prefers-color-scheme: dark) {
   .pav-workspace {
-    --pav-bg: #1f1f1f;
-    --pav-surface: #292929;
-    --pav-border: #3b3a39;
-    --pav-text: #f3f2f1;
-    --pav-muted: #c8c6c4;
-    --pav-code-bg: #141414;
+    color-scheme: dark;
+    --pav-bg: #181818;
+    --pav-surface: #242424;
+    --pav-surface-hover: #233b50;
+    --pav-border: #8a8a8a;
+    --pav-border-subtle: #505050;
+    --pav-text: #ffffff;
+    --pav-muted: #d6d6d6;
+    --pav-primary: #75b6e7;
+    --pav-primary-hover: #a7d8f5;
+    --pav-primary-text: #101010;
+    --pav-error: #ff99a4;
+    --pav-warning: #f7c948;
+    --pav-info: #75b6e7;
+    --pav-success: #89d185;
+    --pav-code-bg: #111111;
+    --pav-focus: #75b6e7;
+    --pav-disabled-bg: #363636;
+    --pav-disabled-text: #a0a0a0;
   }
 }
+.pav-workspace,
+.pav-workspace .widget-label,
+.pav-workspace .widget-html-content,
+.pav-workspace table { color: var(--pav-text) !important; }
 .pav-header { margin-bottom: 12px; }
 .pav-kicker { color: var(--pav-primary); font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
 .pav-header h2 { margin: 4px 0; font-size: 24px; font-weight: 600; color: var(--pav-text); }
@@ -201,19 +228,36 @@ class PowerAppsYamlValidatorUI:
   font-weight: 600 !important;
   min-height: 32px !important;
 }
+.pav-toolbar .widget-button button:hover:not(:disabled) {
+  background: var(--pav-surface-hover) !important;
+  border-color: var(--pav-primary) !important;
+}
 .pav-toolbar .widget-button.mod-primary button {
   background: var(--pav-primary) !important;
   border-color: var(--pav-primary) !important;
   color: var(--pav-primary-text) !important;
 }
+.pav-toolbar .widget-button.mod-primary button:hover:not(:disabled) {
+  background: var(--pav-primary-hover) !important;
+  border-color: var(--pav-primary-hover) !important;
+}
+.pav-toolbar .widget-button button:disabled {
+  background: var(--pav-disabled-bg) !important;
+  border-color: var(--pav-border-subtle) !important;
+  color: var(--pav-disabled-text) !important;
+  opacity: 1 !important;
+}
 .pav-toolbar .widget-button button:focus-visible { outline: 2px solid var(--pav-focus) !important; outline-offset: 2px !important; }
 .pav-status { font-size: 13px; margin: 4px 0 12px; color: var(--pav-muted); }
-.pav-split { width: 100% !important; gap: 16px !important; align-items: stretch !important; }
-.pav-panel { flex: 1 1 50% !important; min-width: 0 !important; background: var(--pav-surface) !important; border: 1px solid var(--pav-border) !important; border-radius: 6px !important; padding: 12px !important; }
+.pav-split { width: 100% !important; height: 360px !important; min-height: 0 !important; gap: 16px !important; align-items: stretch !important; }
+.pav-panel { flex: 1 1 50% !important; width: 50% !important; min-width: 0 !important; height: 360px !important; max-height: 360px !important; overflow: hidden !important; background: var(--pav-surface) !important; border: 1px solid var(--pav-border) !important; border-radius: 6px !important; padding: 12px !important; box-sizing: border-box !important; }
 .pav-panel-title { font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--pav-muted); margin-bottom: 8px; }
-.pav-source-row { align-items: stretch !important; gap: 0 !important; width: 100% !important; }
+.pav-source-row { align-items: stretch !important; gap: 0 !important; width: 100% !important; height: 320px !important; min-height: 0 !important; overflow: hidden !important; }
 .pav-line-numbers {
   flex: 0 0 44px !important;
+  width: 44px !important;
+  height: 320px !important;
+  max-height: 320px !important;
   padding: 10px 6px !important;
   background: var(--pav-code-bg) !important;
   border: 1px solid var(--pav-border) !important;
@@ -224,33 +268,78 @@ class PowerAppsYamlValidatorUI:
   text-align: right !important;
   overflow: hidden !important;
   user-select: none !important;
+  box-sizing: border-box !important;
 }
-.pav-source-row .widget-textarea { flex: 1 1 auto !important; min-width: 0 !important; }
+.pav-source-row > .widget-html { flex: 0 0 44px !important; width: 44px !important; height: 320px !important; max-height: 320px !important; overflow: hidden !important; }
+.pav-source-row .widget-textarea { flex: 1 1 auto !important; min-width: 0 !important; width: calc(100% - 44px) !important; height: 320px !important; max-height: 320px !important; overflow: hidden !important; }
 .pav-source-row .widget-textarea textarea {
+  width: 100% !important;
+  height: 320px !important;
+  max-height: 320px !important;
   font: 12px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace !important;
   border-radius: 0 4px 4px 0 !important;
   border: 1px solid var(--pav-border) !important;
   background: var(--pav-code-bg) !important;
   color: var(--pav-text) !important;
   padding: 10px !important;
-  resize: vertical !important;
+  resize: none !important;
+  white-space: pre !important;
+  overflow: auto !important;
+  box-sizing: border-box !important;
 }
 .pav-source-row .widget-textarea textarea:focus-visible { outline: 2px solid var(--pav-focus) !important; outline-offset: 0 !important; }
 .pav-filters { gap: 6px !important; margin-bottom: 8px !important; flex-wrap: wrap !important; }
-.pav-problems { max-height: 320px; overflow: auto; border: 1px solid var(--pav-border); border-radius: 4px; }
-.pav-problems table { width: 100%; border-collapse: collapse; font-size: 12px; }
-.pav-problems th { position: sticky; top: 0; background: var(--pav-code-bg); text-align: left; padding: 8px; border-bottom: 1px solid var(--pav-border); }
-.pav-problems td { padding: 8px; border-bottom: 1px solid var(--pav-border); vertical-align: top; }
-.pav-problems tr.pav-active td { background: rgba(0, 120, 212, 0.12); }
+.pav-filters .widget-toggle-button button,
+.pav-workspace .widget-toggle-buttons .widget-toggle-button button {
+  background: var(--pav-surface) !important;
+  border-color: var(--pav-border) !important;
+  color: var(--pav-text) !important;
+}
+.pav-filters .widget-toggle-button.mod-active button,
+.pav-workspace .widget-toggle-buttons .widget-toggle-button.mod-active button {
+  background: var(--pav-primary) !important;
+  border-color: var(--pav-primary) !important;
+  color: var(--pav-primary-text) !important;
+}
+.pav-filters .widget-toggle-button button:focus-visible,
+.pav-workspace .widget-toggle-buttons .widget-toggle-button button:focus-visible {
+  outline: 2px solid var(--pav-focus) !important;
+  outline-offset: 2px !important;
+}
+.pav-workspace .widget-upload button {
+  background: var(--pav-surface) !important;
+  border: 1px solid var(--pav-border) !important;
+  color: var(--pav-text) !important;
+}
+.pav-workspace input[type="checkbox"] { accent-color: var(--pav-primary); }
+.pav-problems { height: 282px; max-height: 282px; overflow: auto; border: 1px solid var(--pav-border); border-radius: 4px; background: var(--pav-surface); }
+.pav-problems table { width: 100%; table-layout: fixed; border-collapse: collapse; font-size: 12px; }
+.pav-problems th { position: sticky; top: 0; z-index: 1; background: var(--pav-code-bg); color: var(--pav-text); text-align: left; padding: 8px; border-bottom: 1px solid var(--pav-border); }
+.pav-problems th:nth-child(1), .pav-problems td:nth-child(1) { width: 24px; }
+.pav-problems th:nth-child(2), .pav-problems td:nth-child(2) { width: 48px; }
+.pav-problems th:nth-child(3), .pav-problems td:nth-child(3) { width: 58px; }
+.pav-problems th:nth-child(4), .pav-problems td:nth-child(4) { width: 62px; }
+.pav-problems th:nth-child(5), .pav-problems td:nth-child(5) { width: 110px; }
+.pav-problems td { padding: 8px; color: var(--pav-text); border-bottom: 1px solid var(--pav-border-subtle); vertical-align: top; overflow-wrap: anywhere; word-break: break-word; }
+.pav-problems td:last-child { max-height: 58px; overflow: hidden; }
+.pav-problems tbody tr:hover td { background: var(--pav-surface-hover); }
+.pav-problems tr.pav-active td { background: var(--pav-surface-hover); }
 .pav-sev-error { color: var(--pav-error); font-weight: 700; }
 .pav-sev-warning { color: var(--pav-warning); font-weight: 700; }
 .pav-sev-info { color: var(--pav-info); font-weight: 700; }
-.pav-why { color: var(--pav-muted); font-size: 11px; margin-top: 4px; }
+.pav-why { color: var(--pav-muted); font-size: 11px; margin-top: 4px; max-height: 34px; overflow: auto; }
 .pav-empty { padding: 16px; color: var(--pav-muted); font-size: 13px; }
 .pav-diff { margin-top: 8px; border: 1px solid var(--pav-border); border-radius: 4px; background: var(--pav-code-bg); padding: 10px; font: 12px/1.45 ui-monospace, Menlo, monospace; max-height: 180px; overflow: auto; }
 .pav-diff-del { color: var(--pav-error); }
-.pav-diff-add { color: #107c10; }
+.pav-diff-add { color: var(--pav-success); }
 .pav-row-action { font-size: 11px; color: var(--pav-primary); cursor: pointer; border: 0; background: none; padding: 0; text-decoration: underline; }
+.pav-row-action:hover { color: var(--pav-primary-hover); }
+.pav-row-action:focus-visible { outline: 2px solid var(--pav-focus); outline-offset: 2px; }
+@media (max-width: 900px) {
+  .pav-workspace { max-height: none !important; overflow: visible !important; }
+  .pav-split { height: auto !important; flex-direction: column !important; }
+  .pav-panel { width: 100% !important; flex-basis: auto !important; }
+}
 </style>
 <script>
 (function() {
