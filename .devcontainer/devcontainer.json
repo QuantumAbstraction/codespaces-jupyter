@@ -6,6 +6,14 @@
   "waitFor": "onCreateCommand",
   "updateContentCommand": "python3 -m pip install -r requirements.txt",
   "postCreateCommand": "",
+  "forwardPorts": [8888],
+  "portsAttributes": {
+    "8888": {
+      "label": "Jupyter Server",
+      "onAutoForward": "silent",
+      "visibility": "private"
+    }
+  },
   "customizations": {
     "codespaces": {
       "openFiles": []
@@ -16,5 +24,8 @@
         "ms-python.python"
       ]
     }
+  },
+  "features": {
+    "ghcr.io/postfinance/devcontainer-features/dotnet:1": {}
   }
 }
