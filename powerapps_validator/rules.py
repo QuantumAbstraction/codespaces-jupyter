@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import fnmatch
 import json
+import re
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -18,6 +19,10 @@ SHARED_PROPERTIES = set(CATALOG.get("shared_properties", []))
 DEPRECATED = CATALOG["deprecated_properties"]
 VARIANT_RULES = CATALOG.get("variant_rules", {})
 DOCS = "https://learn.microsoft.com/en-us/power-apps/maker/canvas-apps/"
+FORMULA_LINE_RE = re.compile(
+    r"^(?P<indent>\s*)(?P<name>[A-Za-z][A-Za-z0-9_]*)(?P<separator>\s*:\s*)"
+    r"(?P<formula>=.*?)(?P<newline>\r?\n)?$"
+)
 
 
 def _range(node: Any) -> SourceRange:
@@ -150,6 +155,33 @@ def validate_document(document: ParsedDocument) -> list[Diagnostic]:
         mark = getattr(error, "problem_mark", None)
         node = type("MarkNode", (), {"start_mark": mark, "end_mark": mark})() if mark else None
         location = _range(node) if node else SourceRange(SourcePosition(1, 1), SourcePosition(1, 1))
+        fix = None
+        fix_action = None
+        property_name = None
+        why = "Fix YAML structure, then validate again."
+        if mark is not None:
+            source_lines = document.text.splitlines(keepends=True)
+            if 0 <= mark.line < len(source_lines):
+                source_line = source_lines[mark.line]
+                formula_match = FORMULA_LINE_RE.match(source_line)
+                if formula_match:
+                    property_name = formula_match.group("name")
+                    indent = formula_match.group("indent")
+                    newline = formula_match.group("newline") or "\n"
+                    replacement = (
+                        f"{indent}{property_name}: |-{newline}"
+                        f"{indent}  {formula_match.group('formula')}{newline}"
+                    )
+                    fix = FixEdit(
+                        SourcePosition(mark.line + 1, 1),
+                        SourcePosition(mark.line + 1, len(source_line.rstrip("\r\n")) + 1),
+                        replacement,
+                    )
+                    fix_action = FixAction.REPLACE
+                    why = (
+                        "The formula contains YAML-significant ': ' text. "
+                        "Use a literal block so Power Fx is parsed as one value."
+                    )
         return [
             Diagnostic(
                 "PAX001",
@@ -157,7 +189,10 @@ def validate_document(document: ParsedDocument) -> list[Diagnostic]:
                 f"Invalid YAML: {getattr(error, 'problem', str(error))}",
                 location,
                 "$",
-                why="Fix YAML structure, then validate again.",
+                fix=fix,
+                property_name=property_name,
+                fix_action=fix_action,
+                why=why,
             )
         ]
     root = document.root

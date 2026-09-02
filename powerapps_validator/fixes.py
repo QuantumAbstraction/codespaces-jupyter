@@ -72,8 +72,17 @@ def propose_fixes(text: str, diagnostics: Iterable[Diagnostic] | None = None) ->
             continue
         line = lines[line_number - 1]
 
-        if diagnostic.fix is not None and diagnostic.fix_action in {FixAction.DELETE, FixAction.RENAME}:
-            title = f"Remove {diagnostic.property_name}" if diagnostic.fix_action is FixAction.DELETE else f"Rename {diagnostic.property_name}"
+        if diagnostic.fix is not None and diagnostic.fix_action in {
+            FixAction.DELETE,
+            FixAction.RENAME,
+            FixAction.REPLACE,
+        }:
+            if diagnostic.fix_action is FixAction.DELETE:
+                title = f"Remove {diagnostic.property_name}"
+            elif diagnostic.fix_action is FixAction.RENAME:
+                title = f"Rename {diagnostic.property_name}"
+            else:
+                title = f"Convert {diagnostic.property_name or 'formula'} to YAML block"
             fixes.append(
                 FixSuggestion(
                     diagnostic.code,

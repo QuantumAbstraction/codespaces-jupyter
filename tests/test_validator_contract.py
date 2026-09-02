@@ -77,6 +77,26 @@ def test_multiline_unknown_property_deletes_block():
     assert "nfBi(" in result.text
 
 
+def test_inline_formula_with_yaml_colon_converts_to_literal_block():
+    source = """Screens:
+  Home:
+    Children:
+      - button:
+          Control: Classic/Button@2.2.0
+          Properties:
+            OnSelect: =UpdateContext({selectedView: "REGISTRATIONS"})
+"""
+    diagnostics = validate_text(source)
+    parse_error = next(item for item in diagnostics if item.code == "PAX001")
+    assert parse_error.fix_action is FixAction.REPLACE
+    fixes = propose_fixes(source, diagnostics)
+    assert fixes[0].title == "Convert OnSelect to YAML block"
+    result = apply_fixes(source, fixes)
+    assert "OnSelect: |-" in result.text
+    assert '  =UpdateContext({selectedView: "REGISTRATIONS"})' in result.text
+    assert not any(item.code == "PAX001" for item in validate_text(result.text))
+
+
 def test_groupcontainer_variant_rewrite():
     source = FIXTURES["cases"][4]["source"]
     assert any(item.code == "PA2109" for item in validate_text(source))
