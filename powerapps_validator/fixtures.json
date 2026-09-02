@@ -1,0 +1,7 @@
+{
+  "version": "2026.09.0",
+  "cases": [
+    {"name": "unpinned modern control", "source": "Screens:\n  Home:\n    Children:\n      - save:\n          Control: ModernButton\n          Properties:\n            Text: =\"Save\"\n", "codes": ["PAC100"]},
+    {"name": "invalid root", "source": "Unknown:\n  value: true\n", "codes": ["PAX004"]}
+  ]
+}

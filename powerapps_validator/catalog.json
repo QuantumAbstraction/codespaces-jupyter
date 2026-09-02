@@ -1,0 +1,18 @@
+{
+  "version": "2026.09.0",
+  "source": "power-apps-maker.docx",
+  "roots": ["App", "Screens", "ComponentDefinitions", "DataSources", "EditorState"],
+  "controls": {
+    "ModernButton": {"version": "1.0.0", "variants": ["Default", "Primary", "Secondary"], "properties": ["Text", "AccessibleLabel", "Tooltip", "OnSelect", "Visible", "Width", "Height"]},
+    "ModernTextInput": {"version": "1.0.0", "variants": ["Default"], "properties": ["Value", "Placeholder", "AccessibleLabel", "Tooltip", "Width", "Height"]},
+    "ModernDropdown": {"version": "1.0.0", "variants": ["Default"], "properties": ["Items", "Selected", "AccessibleLabel", "Tooltip", "Width", "Height"]},
+    "ModernSlider": {"version": "1.0.0", "variants": ["Default"], "properties": ["Value", "Min", "Max", "AccessibleLabel", "Tooltip", "Width", "Height"]},
+    "ModernIcon": {"version": "1.1.0", "variants": ["Default"], "properties": ["Icon", "AccessibleLabel", "Tooltip", "Color", "Width", "Height"]}
+  },
+  "deprecated_properties": {"FontColor": "Color", "FontSize": "Size", "FontItalic": "Italic", "FontUnderline": "Underline"},
+  "enums": {"Variant": ["Default", "Primary", "Secondary", "AutoLayout", "ManualLayout", "GridLayout"]},
+  "rules": {
+    "organization": ["nfBi(EN,FR)", "multiline Power Fx uses |-"],
+    "advisory": ["responsive sizing uses App.Width/App.Height or Parent", "interactive controls expose AccessibleLabel and Tooltip"]
+  }
+}
