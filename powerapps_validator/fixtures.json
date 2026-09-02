@@ -1,7 +1,50 @@
 {
   "version": "2026.09.0",
   "cases": [
-    {"name": "unpinned modern control", "source": "Screens:\n  Home:\n    Children:\n      - save:\n          Control: ModernButton\n          Properties:\n            Text: =\"Save\"\n", "codes": ["PAC100"]},
-    {"name": "invalid root", "source": "Unknown:\n  value: true\n", "codes": ["PAX004"]}
+    {
+      "name": "unpinned modern control",
+      "source": "Screens:\n  Home:\n    Children:\n      - save:\n          Control: ModernButton\n          Properties:\n            Text: =\"Save\"\n",
+      "codes": [
+        "PAC100"
+      ]
+    },
+    {
+      "name": "invalid root",
+      "source": "Unknown:\n  value: true\n",
+      "codes": [
+        "PAX004"
+      ]
+    },
+    {
+      "name": "label radius pa2108",
+      "source": "Screens:\n  Home:\n    Children:\n      - lbl:\n          Control: Label@2.5.1\n          Properties:\n            Text: =\"Hello\"\n            RadiusTopLeft: =12\n            Size: =16\n",
+      "codes": [
+        "PA2108"
+      ]
+    },
+    {
+      "name": "label fontsize rename",
+      "source": "Screens:\n  Home:\n    Children:\n      - lbl:\n          Control: Label@2.5.1\n          Properties:\n            Text: =\"Hello\"\n            FontSize: =16\n",
+      "codes": [
+        "PA2108"
+      ]
+    },
+    {
+      "name": "groupcontainer invalid variant",
+      "source": "Screens:\n  Home:\n    Children:\n      - box:\n          Control: GroupContainer@1.5.0\n          Variant: Horizontal\n          Properties:\n            Fill: =Color.White\n",
+      "codes": [
+        "PA2109"
+      ]
+    },
+    {
+      "name": "unknown control skips matrix",
+      "source": "Screens:\n  Home:\n    Children:\n      - cmp:\n          Control: MyCustomWidget@1.0.0\n          Properties:\n            CustomProp: =true\n",
+      "codes": [
+        "PAC101"
+      ],
+      "must_not_include": [
+        "PA2108"
+      ]
+    }
   ]
 }

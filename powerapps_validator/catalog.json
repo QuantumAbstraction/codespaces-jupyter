@@ -1,18 +1,512 @@
 {
   "version": "2026.09.0",
-  "source": "power-apps-maker.docx",
-  "roots": ["App", "Screens", "ComponentDefinitions", "DataSources", "EditorState"],
-  "controls": {
-    "ModernButton": {"version": "1.0.0", "variants": ["Default", "Primary", "Secondary"], "properties": ["Text", "AccessibleLabel", "Tooltip", "OnSelect", "Visible", "Width", "Height"]},
-    "ModernTextInput": {"version": "1.0.0", "variants": ["Default"], "properties": ["Value", "Placeholder", "AccessibleLabel", "Tooltip", "Width", "Height"]},
-    "ModernDropdown": {"version": "1.0.0", "variants": ["Default"], "properties": ["Items", "Selected", "AccessibleLabel", "Tooltip", "Width", "Height"]},
-    "ModernSlider": {"version": "1.0.0", "variants": ["Default"], "properties": ["Value", "Min", "Max", "AccessibleLabel", "Tooltip", "Width", "Height"]},
-    "ModernIcon": {"version": "1.1.0", "variants": ["Default"], "properties": ["Icon", "AccessibleLabel", "Tooltip", "Color", "Width", "Height"]}
+  "source": "power-apps-maker.docx + Studio PA2108 trap table",
+  "roots": [
+    "App",
+    "Screens",
+    "ComponentDefinitions",
+    "DataSources",
+    "EditorState"
+  ],
+  "shared_properties": [
+    "X",
+    "Y",
+    "Width",
+    "Height",
+    "Visible",
+    "DisplayMode",
+    "AlignInContainer",
+    "FillPortions",
+    "LayoutMinHeight",
+    "LayoutMinWidth",
+    "PaddingTop",
+    "PaddingBottom",
+    "PaddingLeft",
+    "PaddingRight",
+    "Fill",
+    "BorderColor",
+    "BorderStyle",
+    "BorderThickness",
+    "DropShadow",
+    "RadiusTopLeft",
+    "RadiusTopRight",
+    "RadiusBottomLeft",
+    "RadiusBottomRight",
+    "OnSelect",
+    "TabIndex"
+  ],
+  "deprecated_properties": {
+    "FontColor": "Color",
+    "FontSize": "Size",
+    "FontItalic": "Italic",
+    "FontUnderline": "Underline"
   },
-  "deprecated_properties": {"FontColor": "Color", "FontSize": "Size", "FontItalic": "Italic", "FontUnderline": "Underline"},
-  "enums": {"Variant": ["Default", "Primary", "Secondary", "AutoLayout", "ManualLayout", "GridLayout"]},
+  "variant_rules": {
+    "GroupContainer": {
+      "allowed": [
+        "AutoLayout",
+        "ManualLayout"
+      ],
+      "invalid_map": {
+        "Horizontal": {
+          "variant": "AutoLayout",
+          "layout_direction": "Horizontal"
+        },
+        "Vertical": {
+          "variant": "AutoLayout",
+          "layout_direction": "Vertical"
+        },
+        "GridLayout": {
+          "variant": "AutoLayout",
+          "layout_direction": "Vertical"
+        }
+      }
+    }
+  },
+  "controls": {
+    "Label": {
+      "version": "2.5.1",
+      "property_mode": "denylist",
+      "properties": [
+        "Text",
+        "Color",
+        "Size",
+        "Font",
+        "FontWeight",
+        "Align",
+        "VerticalAlign",
+        "AutoHeight",
+        "Wrap",
+        "LineHeight",
+        "Italic",
+        "Underline",
+        "Strikethrough",
+        "Overflow",
+        "Live",
+        "Role"
+      ],
+      "forbidden_globs": [
+        "Radius*",
+        "DropShadow",
+        "Hover*",
+        "Pressed*",
+        "Focused*"
+      ],
+      "renames": {
+        "FontSize": "Size",
+        "FontColor": "Color",
+        "FontItalic": "Italic",
+        "FontUnderline": "Underline"
+      },
+      "forbidden_why": "Label is display-only and does not support radius, shadow, or interactive state properties. Wrap in GroupContainer for rounded corners."
+    },
+    "Classic/Button": {
+      "version": "2.2.0",
+      "property_mode": "denylist",
+      "properties": [
+        "Text",
+        "Color",
+        "Size",
+        "Font",
+        "FontWeight",
+        "Align",
+        "VerticalAlign",
+        "HoverColor",
+        "HoverFill",
+        "PressedColor",
+        "PressedFill",
+        "DisabledColor",
+        "DisabledFill",
+        "HoverBorderColor",
+        "PressedBorderColor",
+        "DisabledBorderColor",
+        "FocusedBorderColor",
+        "FocusedBorderThickness"
+      ],
+      "renames": {
+        "FontSize": "Size",
+        "FontColor": "Color"
+      }
+    },
+    "Classic/TextInput": {
+      "version": "2.3.2",
+      "property_mode": "denylist",
+      "properties": [
+        "Default",
+        "Value",
+        "Mode",
+        "HintText",
+        "Format",
+        "Color",
+        "Size",
+        "Font",
+        "FontWeight",
+        "HoverColor",
+        "HoverFill",
+        "PressedColor",
+        "PressedFill",
+        "DisabledColor",
+        "DisabledFill",
+        "HoverBorderColor",
+        "PressedBorderColor",
+        "DisabledBorderColor",
+        "FocusedBorderColor",
+        "FocusedBorderThickness"
+      ],
+      "renames": {
+        "FontSize": "Size",
+        "FontColor": "Color"
+      }
+    },
+    "Classic/ComboBox": {
+      "version": "2.4.0",
+      "property_mode": "denylist",
+      "properties": [
+        "Default",
+        "Items",
+        "SearchFields",
+        "SelectMultiple",
+        "Color",
+        "Size",
+        "Font",
+        "HoverColor",
+        "HoverFill",
+        "PressedColor",
+        "PressedFill",
+        "DisabledColor",
+        "DisabledFill"
+      ],
+      "forbidden_globs": [
+        "Radius*"
+      ],
+      "renames": {
+        "FontSize": "Size",
+        "FontColor": "Color"
+      },
+      "forbidden_why": "Classic/ComboBox does not support corner radius. Wrap in GroupContainer for rounded corners."
+    },
+    "Classic/CheckBox": {
+      "version": "2.1.0",
+      "property_mode": "denylist",
+      "properties": [
+        "Default",
+        "Text",
+        "FontColor",
+        "Size",
+        "Font",
+        "CheckboxSize",
+        "CheckboxBorderColor"
+      ],
+      "forbidden_globs": [
+        "Radius*",
+        "Color"
+      ],
+      "renames": {
+        "FontSize": "Size"
+      },
+      "forbidden_why": "Classic/CheckBox uses FontColor (not Color) and does not support radius."
+    },
+    "Classic/Icon": {
+      "version": "2.5.0",
+      "property_mode": "denylist",
+      "properties": [
+        "Icon",
+        "Color",
+        "HoverColor",
+        "PressedColor",
+        "DisabledColor",
+        "Rotation",
+        "IconRotation"
+      ],
+      "renames": {
+        "FontSize": "Size",
+        "FontColor": "Color"
+      }
+    },
+    "Classic/DatePicker": {
+      "version": "2.6.0",
+      "property_mode": "denylist",
+      "properties": [
+        "DefaultDate",
+        "SelectedDate",
+        "Format",
+        "StartYear",
+        "EndYear",
+        "Color",
+        "Size",
+        "Font"
+      ],
+      "forbidden_globs": [
+        "Radius*",
+        "DropShadow"
+      ],
+      "renames": {
+        "FontSize": "Size",
+        "FontColor": "Color",
+        "Default": "DefaultDate"
+      },
+      "forbidden_why": "Classic/DatePicker does not support corner radius or drop shadow."
+    },
+    "Classic/Radio": {
+      "version": "2.3.0",
+      "property_mode": "denylist",
+      "properties": [
+        "Default",
+        "Items",
+        "Layout",
+        "FontColor",
+        "Size",
+        "Font"
+      ],
+      "forbidden_globs": [
+        "Radius*"
+      ],
+      "renames": {
+        "FontSize": "Size"
+      }
+    },
+    "Gallery": {
+      "version": "2.15.0",
+      "property_mode": "denylist",
+      "variants": [
+        "Vertical",
+        "Horizontal",
+        "BrowseLayout_Vertical_TwoTextOneImageVariant_ver5"
+      ],
+      "properties": [
+        "Items",
+        "TemplateSize",
+        "TemplatePadding",
+        "TemplateFill",
+        "ShowScrollbar",
+        "WrapCount",
+        "NavigationStep",
+        "LoadingSpinner",
+        "LoadingSpinnerColor"
+      ]
+    },
+    "GroupContainer": {
+      "version": "1.5.0",
+      "property_mode": "denylist",
+      "variants": [
+        "AutoLayout",
+        "ManualLayout"
+      ],
+      "properties": [
+        "LayoutDirection",
+        "LayoutAlignItems",
+        "LayoutJustifyContent",
+        "LayoutGap",
+        "LayoutWrap",
+        "LayoutOverflowX",
+        "LayoutOverflowY",
+        "LayoutMode"
+      ]
+    },
+    "Rectangle": {
+      "version": "2.3.0",
+      "property_mode": "denylist",
+      "properties": [
+        "DisabledFill"
+      ],
+      "forbidden_globs": [
+        "Radius*"
+      ],
+      "forbidden_why": "Rectangle does not support Radius* properties."
+    },
+    "CanvasComponent": {
+      "version": null,
+      "skip_property_matrix": true,
+      "properties": []
+    },
+    "ModernButton": {
+      "version": "1.0.0",
+      "property_mode": "allowlist",
+      "variants": [
+        "Default",
+        "Primary",
+        "Secondary"
+      ],
+      "properties": [
+        "Text",
+        "AccessibleLabel",
+        "Tooltip",
+        "OnSelect"
+      ]
+    },
+    "ModernTextInput": {
+      "version": "1.0.0",
+      "property_mode": "allowlist",
+      "variants": [
+        "Default"
+      ],
+      "properties": [
+        "Value",
+        "Placeholder",
+        "AccessibleLabel",
+        "Tooltip"
+      ],
+      "forbidden": [
+        "Default"
+      ],
+      "forbidden_why": "ModernTextInput uses Value, not Default. Switch to Classic/TextInput@2.3.2 if you need Default."
+    },
+    "ModernDropdown": {
+      "version": "1.0.0",
+      "property_mode": "allowlist",
+      "variants": [
+        "Default"
+      ],
+      "properties": [
+        "Items",
+        "Selected",
+        "AccessibleLabel",
+        "Tooltip"
+      ]
+    },
+    "ModernSlider": {
+      "version": "1.0.0",
+      "property_mode": "allowlist",
+      "variants": [
+        "Default"
+      ],
+      "properties": [
+        "Value",
+        "Min",
+        "Max",
+        "AccessibleLabel",
+        "Tooltip"
+      ]
+    },
+    "ModernIcon": {
+      "version": "1.1.0",
+      "property_mode": "allowlist",
+      "variants": [
+        "Default"
+      ],
+      "properties": [
+        "Icon",
+        "AccessibleLabel",
+        "Tooltip",
+        "Color"
+      ]
+    },
+    "Text": {
+      "version": "0.0.50",
+      "property_mode": "denylist",
+      "properties": [
+        "Text",
+        "FontColor",
+        "Size",
+        "Font",
+        "BorderRadiusTopLeft",
+        "BorderRadiusTopRight",
+        "BorderRadiusBottomLeft",
+        "BorderRadiusBottomRight"
+      ],
+      "renames": {
+        "FontSize": "Size",
+        "RadiusTopLeft": "BorderRadiusTopLeft",
+        "RadiusTopRight": "BorderRadiusTopRight",
+        "RadiusBottomLeft": "BorderRadiusBottomLeft",
+        "RadiusBottomRight": "BorderRadiusBottomRight"
+      }
+    },
+    "TextInput": {
+      "version": "0.0.54",
+      "property_mode": "denylist",
+      "properties": [
+        "Value",
+        "Placeholder",
+        "AccessibleLabel"
+      ],
+      "forbidden": [
+        "Default",
+        "SearchFields"
+      ],
+      "forbidden_why": "Modern TextInput@0.0.54 uses Value (not Default). Use Classic/TextInput@2.3.2 for Default."
+    },
+    "ComboBox": {
+      "version": "0.0.51",
+      "property_mode": "denylist",
+      "properties": [
+        "Items",
+        "Selected",
+        "AccessibleLabel"
+      ],
+      "forbidden_globs": [
+        "Radius*",
+        "DropShadow",
+        "SearchFields",
+        "Default"
+      ],
+      "forbidden_why": "Modern ComboBox@0.0.51 does not support SearchFields or radius. Use Classic/ComboBox@2.4.0."
+    },
+    "DatePicker": {
+      "version": "0.0.42",
+      "property_mode": "denylist",
+      "properties": [
+        "SelectedDate",
+        "AccessibleLabel"
+      ],
+      "forbidden": [
+        "DefaultDate",
+        "RadiusTopLeft",
+        "RadiusTopRight",
+        "RadiusBottomLeft",
+        "RadiusBottomRight",
+        "DropShadow"
+      ],
+      "renames": {
+        "DefaultDate": "SelectedDate"
+      },
+      "forbidden_why": "Modern DatePicker uses SelectedDate (not DefaultDate) and does not support radius or DropShadow."
+    },
+    "Radio": {
+      "version": "0.0.25",
+      "property_mode": "denylist",
+      "properties": [
+        "Items",
+        "AccessibleLabel"
+      ],
+      "forbidden": [
+        "Default"
+      ],
+      "forbidden_why": "Modern Radio@0.0.25 does not support Default. Use Classic/Radio@2.3.0."
+    },
+    "NumberInput": {
+      "version": "2.9.12",
+      "property_mode": "denylist",
+      "properties": [
+        "Value",
+        "Min",
+        "Max",
+        "AccessibleLabel"
+      ],
+      "forbidden_globs": [
+        "Radius*"
+      ]
+    }
+  },
+  "enums": {
+    "Variant": [
+      "Default",
+      "Primary",
+      "Secondary",
+      "AutoLayout",
+      "ManualLayout",
+      "Vertical",
+      "Horizontal"
+    ]
+  },
   "rules": {
-    "organization": ["nfBi(EN,FR)", "multiline Power Fx uses |-"],
-    "advisory": ["responsive sizing uses App.Width/App.Height or Parent", "interactive controls expose AccessibleLabel and Tooltip"]
+    "organization": [
+      "nfBi(EN,FR)",
+      "multiline Power Fx uses |-"
+    ],
+    "advisory": [
+      "responsive sizing uses App.Width/App.Height or Parent",
+      "interactive controls expose AccessibleLabel and Tooltip"
+    ]
   }
 }

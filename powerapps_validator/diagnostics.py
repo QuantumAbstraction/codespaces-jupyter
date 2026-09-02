@@ -2,15 +2,23 @@
 from __future__ import annotations
 
 import hashlib
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
-from typing import Sequence
 
 
 class Severity(str, Enum):
     ERROR = "error"
     WARNING = "warning"
     INFO = "info"
+
+
+class FixAction(str, Enum):
+    DELETE = "delete"
+    RENAME = "rename"
+    REPLACE = "replace"
+    PIN_VERSION = "pin_version"
+    ADD_EQUALS = "add_equals"
+    VARIANT_REWRITE = "variant_rewrite"
 
 
 @dataclass(frozen=True)
@@ -37,10 +45,15 @@ class Diagnostic:
     code: str
     severity: Severity
     message: str
-    range: SourceRange = SourceRange(SourcePosition(1, 1), SourcePosition(1, 1))
+    range: SourceRange = field(default_factory=lambda: SourceRange(SourcePosition(1, 1), SourcePosition(1, 1)))
     path: str = "$"
     documentation_url: str | None = None
     fix: FixEdit | None = None
+    control_type: str | None = None
+    property_name: str | None = None
+    fix_action: FixAction | None = None
+    fix_rename_to: str | None = None
+    why: str | None = None
 
     @property
     def line(self) -> int:
@@ -62,10 +75,20 @@ class FixSuggestion:
     edit: FixEdit
     revision: str
     documentation_url: str | None = None
+    diagnostic_id: str | None = None
+    why: str | None = None
 
     @property
     def line(self) -> int:
         return self.edit.start.line
+
+    @property
+    def end_line(self) -> int:
+        return self.edit.end.line
+
+    @property
+    def before(self) -> str:
+        return ""
 
     @property
     def after(self) -> str:
@@ -82,3 +105,7 @@ class FixApplication:
 
 def document_revision(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def diagnostic_id(diagnostic: Diagnostic) -> str:
+    return f"{diagnostic.code}:{diagnostic.path}:{diagnostic.range.start.line}:{diagnostic.range.start.column}"

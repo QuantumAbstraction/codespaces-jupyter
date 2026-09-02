@@ -22,13 +22,14 @@ class ValidationController:
         self.fixes = propose_fixes(self.text, self.diagnostics)
         return self.diagnostics
 
-    def preview(self) -> FixApplication:
+    def preview(self, fixes: list[FixSuggestion] | None = None) -> FixApplication:
         if self.revision != document_revision(self.text):
             self.validate()
-        return apply_fixes(self.text, self.fixes or [], expected_revision=self.revision)
+        chosen = fixes if fixes is not None else (self.fixes or [])
+        return apply_fixes(self.text, chosen, expected_revision=self.revision)
 
-    def apply(self) -> FixApplication:
-        result = self.preview()
+    def apply(self, fixes: list[FixSuggestion] | None = None) -> FixApplication:
+        result = self.preview(fixes)
         if result.stale:
             return result
         self.text = result.text
