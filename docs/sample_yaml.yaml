@@ -1,0 +1,2249 @@
+Screens:
+  Session Details | Détails de la séance:
+    Properties:
+      Fill: =myTheme.Background
+      OnHidden: |-
+        =UpdateContext(
+            {
+                locTrainingSessionID: Blank(),
+                locTrainingSessionRecord: Blank(),
+                locSessionSelectedView: "REGISTRATIONS",
+                locSessionSelectedRegistration: Blank()
+            }
+        );
+        Clear(locSessionRegistrati0ns)
+      OnVisible: |-
+        =UpdateContext(
+            {
+                locTrainingSessionRecord:
+                    LookUp(
+                        'CSC Training Sessions',
+                        'CSC Training Sessions ID' =
+                            Coalesce(
+                                locTrainingSessionID,
+                                IfError(
+                                    GUID(Param("session-id")),
+                                    Blank()
+                                )
+                            )
+                    ),
+                locSortCourseListColumn:
+                    Coalesce(
+                        locSortCourseListColumn,
+                        "AssignedAreaDisplayText"
+                    ),
+                locSortType:
+                    Coalesce(
+                        locSortType,
+                        SortOrder.Ascending
+                    ),
+                locSessionSelectedView: "REGISTRATIONS",
+                locSessionSelectedRegistration: Blank(),
+                locSessionRefreshedAt: Now()
+            }
+        );
+        Select(session_btn_ReloadRegistrations)
+    Children:
+      - session_con_Root:
+          Control: GroupContainer@1.5.0
+          Variant: AutoLayout
+          Properties:
+            DropShadow: =DropShadow.None
+            Fill: =myTheme.Background
+            Height: =App.Height
+            LayoutAlignItems: =LayoutAlignItems.Stretch
+            LayoutDirection: =LayoutDirection.Horizontal
+            LayoutMinHeight: =0
+            LayoutMinWidth: =0
+            Width: =App.Width
+          Children:
+            - session_cmp_SideMenu:
+                Control: CanvasComponent
+                ComponentName: _cx_nav_SideMenu
+                Properties:
+                  AppName: =nfBi("HR Learning Hub", "Carrefour d'apprentissage des RH")
+                  CollapsedWidth: =75
+                  ExpandedWidth: =320
+                  Fill: =myTheme.Transparent
+                  Height: =App.Height
+                  HelpURL: =""
+                  Logo: =img.Home
+                  LogoCompact: =img.Report
+                  MenuItems: =tbl.Menus
+                  ProfileImage: =User().Image
+                  ProfileName: =User().FullName
+                  ProfileRole: =nfBi("Employee", "Employé")
+                  Width: |-
+                    =If(
+                        SideMenuCollapsed,
+                        Self.CollapsedWidth,
+                        Self.ExpandedWidth
+                    )
+                  svgMode: =true
+            - session_con_Main:
+                Control: GroupContainer@1.5.0
+                Variant: AutoLayout
+                Properties:
+                  DropShadow: =DropShadow.None
+                  Fill: =myTheme.Background
+                  FillPortions: =1
+                  LayoutAlignItems: =LayoutAlignItems.Stretch
+                  LayoutDirection: =LayoutDirection.Vertical
+                  LayoutGap: =10
+                  LayoutMinHeight: =0
+                  LayoutMinWidth: =0
+                  PaddingBottom: =10
+                  PaddingLeft: =16
+                  PaddingRight: =16
+                  PaddingTop: =8
+                Children:
+                  - session_cmp_HeaderBar:
+                      Control: CanvasComponent
+                      ComponentName: _cx_nav_HeaderBar
+                      Properties:
+                        AlignInContainer: =AlignInContainer.Stretch
+                        Fill: =myTheme.Transparent
+                        Height: =60
+                        LayoutMinHeight: =60
+                        LayoutMinWidth: =0
+                        NavItems: =tbl.Tabs.Requests
+                        Width: =Parent.Width
+                        svgMode: =true
+                  - session_con_Hero:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        DropShadow: =DropShadow.None
+                        Fill: =myTheme.Surface
+                        FillPortions: =0
+                        Height: =132
+                        LayoutAlignItems: =LayoutAlignItems.Center
+                        LayoutDirection: =LayoutDirection.Horizontal
+                        LayoutGap: =14
+                        LayoutMinHeight: =132
+                        LayoutMinWidth: =0
+                        PaddingBottom: =16
+                        PaddingLeft: =20
+                        PaddingRight: =20
+                        PaddingTop: =16
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                      Children:
+                        - session_con_HeroContent:
+                            Control: GroupContainer@1.5.0
+                            Variant: AutoLayout
+                            Properties:
+                              DropShadow: =DropShadow.None
+                              Fill: =myTheme.Transparent
+                              FillPortions: =1
+                              LayoutDirection: =LayoutDirection.Vertical
+                              LayoutGap: =6
+                              LayoutMinHeight: =0
+                              LayoutMinWidth: =260
+                            Children:
+                              - session_con_Badges:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: AutoLayout
+                                  Properties:
+                                    DropShadow: =DropShadow.None
+                                    Fill: =myTheme.Transparent
+                                    FillPortions: =0
+                                    Height: =28
+                                    LayoutAlignItems: =LayoutAlignItems.Center
+                                    LayoutDirection: =LayoutDirection.Horizontal
+                                    LayoutGap: =8
+                                    LayoutMinHeight: =28
+                                    LayoutMinWidth: =0
+                                  Children:
+                                    - session_lbl_CourseCode:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          Align: =Align.Center
+                                          Color: =myTheme.SelectionText
+                                          Fill: =myTheme.Selection
+                                          Font: =Font.Lato
+                                          FontWeight: =FontWeight.Bold
+                                          Height: =26
+                                          LayoutMinHeight: =26
+                                          LayoutMinWidth: =80
+                                          PaddingBottom: =0
+                                          PaddingLeft: =8
+                                          PaddingRight: =8
+                                          PaddingTop: =0
+                                          RadiusBottomLeft: =6
+                                          RadiusBottomRight: =6
+                                          RadiusTopLeft: =6
+                                          RadiusTopRight: =6
+                                          Size: =9
+                                          Text: =Coalesce(locTrainingSessionRecord.Course.Code, "–")
+                                          Width: =100
+                                    - session_lbl_Region:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          Align: =Align.Center
+                                          Color: =myTheme.InformationBackgroundText
+                                          Fill: =myTheme.InformationBackground
+                                          Font: =Font.Lato
+                                          FontWeight: =FontWeight.Bold
+                                          Height: =26
+                                          LayoutMinHeight: =26
+                                          LayoutMinWidth: =70
+                                          PaddingBottom: =0
+                                          PaddingLeft: =8
+                                          PaddingRight: =8
+                                          PaddingTop: =0
+                                          RadiusBottomLeft: =6
+                                          RadiusBottomRight: =6
+                                          RadiusTopLeft: =6
+                                          RadiusTopRight: =6
+                                          Size: =9
+                                          Text: =Coalesce(locTrainingSessionRecord.'Coordinating Regional Campus'.Code, "–")
+                                          Width: =90
+                                    - session_lbl_Category:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          Align: =Align.Center
+                                          Color: =myTheme.Text
+                                          Fill: =myTheme.SurfaceSubtle
+                                          Font: =Font.Lato
+                                          FontWeight: =FontWeight.Semibold
+                                          Height: =26
+                                          LayoutMinHeight: =26
+                                          LayoutMinWidth: =140
+                                          PaddingBottom: =0
+                                          PaddingLeft: =8
+                                          PaddingRight: =8
+                                          PaddingTop: =0
+                                          RadiusBottomLeft: =6
+                                          RadiusBottomRight: =6
+                                          RadiusTopLeft: =6
+                                          RadiusTopRight: =6
+                                          Size: =9
+                                          Text: |-
+                                            =nfBi(
+                                                locTrainingSessionRecord.Course.'Course Category'.EN,
+                                                locTrainingSessionRecord.Course.'Course Category'.FR
+                                            )
+                                          Width: =Min(260, Parent.Width * 0.35)
+                              - session_lbl_Title:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    AlignInContainer: =AlignInContainer.Stretch
+                                    Color: =myTheme.Text
+                                    Fill: =myTheme.Transparent
+                                    Font: =Font.Lato
+                                    FontWeight: =FontWeight.Bold
+                                    Height: =42
+                                    LayoutMinHeight: =42
+                                    LayoutMinWidth: =0
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Size: =20
+                                    Text: |-
+                                      =Coalesce(
+                                          locTrainingSessionRecord.'Unlisted Course Name',
+                                          nfBi(
+                                              locTrainingSessionRecord.Course.'Title EN',
+                                              locTrainingSessionRecord.Course.'Title FR'
+                                          )
+                                      )
+                              - session_con_Delivery:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: AutoLayout
+                                  Properties:
+                                    DropShadow: =DropShadow.None
+                                    Fill: =myTheme.Transparent
+                                    FillPortions: =0
+                                    Height: =28
+                                    LayoutAlignItems: =LayoutAlignItems.Center
+                                    LayoutDirection: =LayoutDirection.Horizontal
+                                    LayoutGap: =8
+                                    LayoutMinHeight: =28
+                                    LayoutMinWidth: =0
+                                  Children:
+                                    - session_ico_Delivery:
+                                        Control: Classic/Icon@2.5.0
+                                        Properties:
+                                          AccessibleLabel: =nfBi("Delivery method", "Mode de prestation")
+                                          Color: =myTheme.IconsMuted
+                                          Height: =22
+                                          HoverColor: =myTheme.IconsMuted
+                                          Icon: |-
+                                            =If(
+                                                "virtual" in Lower(
+                                                    Coalesce(
+                                                        locTrainingSessionRecord.Course.'Delivery Method EN',
+                                                        ""
+                                                    )
+                                                ),
+                                                Icon.Laptop,
+                                                Icon.People
+                                            )
+                                          LayoutMinHeight: =22
+                                          LayoutMinWidth: =22
+                                          PressedColor: =myTheme.IconsMuted
+                                          TabIndex: =0
+                                          Tooltip: =nfBi("Delivery method", "Mode de prestation")
+                                          Width: =22
+                                    - session_lbl_Delivery:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          Color: =myTheme.TextMuted
+                                          Fill: =myTheme.Transparent
+                                          FillPortions: =1
+                                          Font: =Font.Lato
+                                          FontWeight: =FontWeight.Semibold
+                                          Height: =24
+                                          LayoutMinHeight: =24
+                                          LayoutMinWidth: =100
+                                          PaddingBottom: =0
+                                          PaddingLeft: =0
+                                          PaddingRight: =0
+                                          PaddingTop: =0
+                                          Size: =10
+                                          Text: |-
+                                            =nfBi(
+                                                locTrainingSessionRecord.Course.'Delivery Method EN',
+                                                locTrainingSessionRecord.Course.'Delivery Method FR'
+                                            )
+                        - session_btn_Back:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =myTheme.Secondary
+                              BorderStyle: =BorderStyle.Solid
+                              BorderThickness: =2
+                              Color: =myTheme.Secondary
+                              DisabledBorderColor: =myTheme.Border
+                              DisabledColor: =myTheme.DisabledText
+                              DisabledFill: =myTheme.Transparent
+                              Fill: =myTheme.Transparent
+                              FocusedBorderColor: =myTheme.Focus
+                              FocusedBorderThickness: =2
+                              Font: =Font.Lato
+                              FontWeight: =FontWeight.Bold
+                              Height: =40
+                              HoverBorderColor: =myTheme.SecondaryHover
+                              HoverColor: =myTheme.SecondaryText
+                              HoverFill: =myTheme.SecondaryHover
+                              LayoutMinHeight: =40
+                              LayoutMinWidth: =130
+                              OnSelect: |-
+                                =Navigate(
+                                    'All Training Sessions | Toutes les séances de formation',
+                                    ScreenTransition.CoverRight
+                                )
+                              PressedBorderColor: =myTheme.SecondaryPressed
+                              PressedColor: =myTheme.SecondaryText
+                              PressedFill: =myTheme.SecondaryPressed
+                              RadiusBottomLeft: =8
+                              RadiusBottomRight: =8
+                              RadiusTopLeft: =8
+                              RadiusTopRight: =8
+                              Size: =10
+                              Text: =nfBi("Back to sessions", "Retour aux séances")
+                              Tooltip: =nfBi("Return to all training sessions", "Revenir à toutes les séances de formation")
+                              Width: =150
+                  - session_con_Workspace:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        DropShadow: =DropShadow.None
+                        Fill: =myTheme.Transparent
+                        FillPortions: =1
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =If(App.Width < 1050, LayoutDirection.Vertical, LayoutDirection.Horizontal)
+                        LayoutGap: =12
+                        LayoutMinHeight: =0
+                        LayoutMinWidth: =0
+                      Children:
+                        - session_con_Information:
+                            Control: GroupContainer@1.5.0
+                            Variant: AutoLayout
+                            Properties:
+                              DropShadow: =DropShadow.None
+                              Fill: =myTheme.Surface
+                              FillPortions: =0
+                              Height: =If(App.Width < 1050, 420, Parent.Height)
+                              LayoutDirection: =LayoutDirection.Vertical
+                              LayoutGap: =8
+                              LayoutMinHeight: =390
+                              LayoutMinWidth: =290
+                              LayoutOverflowY: =LayoutOverflow.Scroll
+                              PaddingBottom: =16
+                              PaddingLeft: =16
+                              PaddingRight: =16
+                              PaddingTop: =16
+                              RadiusBottomLeft: =12
+                              RadiusBottomRight: =12
+                              RadiusTopLeft: =12
+                              RadiusTopRight: =12
+                              Width: =If(App.Width < 1050, Parent.Width, Min(390, Parent.Width * 0.34))
+                            Children:
+                              - session_lbl_InformationHeading:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    Color: =myTheme.Text
+                                    Fill: =myTheme.Transparent
+                                    Font: =Font.Lato
+                                    FontWeight: =FontWeight.Bold
+                                    Height: =36
+                                    LayoutMinHeight: =36
+                                    LayoutMinWidth: =0
+                                    PaddingBottom: =0
+                                    PaddingLeft: =0
+                                    PaddingRight: =0
+                                    PaddingTop: =0
+                                    Size: =15
+                                    Text: =nfBi("Session information", "Renseignements sur la séance")
+                              - session_con_LanguageInfo:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: AutoLayout
+                                  Properties:
+                                    DropShadow: =DropShadow.None
+                                    Fill: =myTheme.SurfaceSubtle
+                                    FillPortions: =0
+                                    Height: =64
+                                    LayoutAlignItems: =LayoutAlignItems.Center
+                                    LayoutDirection: =LayoutDirection.Horizontal
+                                    LayoutGap: =10
+                                    LayoutMinHeight: =64
+                                    LayoutMinWidth: =0
+                                    PaddingLeft: =12
+                                    PaddingRight: =12
+                                    RadiusBottomLeft: =8
+                                    RadiusBottomRight: =8
+                                    RadiusTopLeft: =8
+                                    RadiusTopRight: =8
+                                  Children:
+                                    - session_ico_Language:
+                                        Control: Classic/Icon@2.5.0
+                                        Properties:
+                                          AccessibleLabel: =nfBi("Delivery language", "Langue de prestation")
+                                          Color: =myTheme.Icons
+                                          Height: =28
+                                          HoverColor: =myTheme.Icons
+                                          Icon: =Icon.Globe
+                                          LayoutMinHeight: =28
+                                          LayoutMinWidth: =28
+                                          PressedColor: =myTheme.Icons
+                                          TabIndex: =0
+                                          Tooltip: =nfBi("Delivery language", "Langue de prestation")
+                                          Width: =28
+                                    - session_con_LanguageText:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: AutoLayout
+                                        Properties:
+                                          DropShadow: =DropShadow.None
+                                          Fill: =myTheme.Transparent
+                                          FillPortions: =1
+                                          LayoutDirection: =LayoutDirection.Vertical
+                                          LayoutGap: =0
+                                          LayoutMinHeight: =0
+                                          LayoutMinWidth: =100
+                                        Children:
+                                          - session_lbl_LanguageHeader:
+                                              Control: Label@2.5.1
+                                              Properties:
+                                                Color: =myTheme.TextMuted
+                                                Fill: =myTheme.Transparent
+                                                Font: =Font.Lato
+                                                FontWeight: =FontWeight.Semibold
+                                                Height: =24
+                                                LayoutMinHeight: =24
+                                                LayoutMinWidth: =0
+                                                PaddingBottom: =0
+                                                PaddingLeft: =0
+                                                PaddingRight: =0
+                                                PaddingTop: =0
+                                                Size: =9
+                                                Text: =nfBi("Delivery language", "Langue de prestation")
+                                          - session_lbl_LanguageValue:
+                                              Control: Label@2.5.1
+                                              Properties:
+                                                Color: =myTheme.Text
+                                                Fill: =myTheme.Transparent
+                                                Font: =Font.Lato
+                                                FontWeight: =FontWeight.Bold
+                                                Height: =26
+                                                LayoutMinHeight: =26
+                                                LayoutMinWidth: =0
+                                                PaddingBottom: =0
+                                                PaddingLeft: =0
+                                                PaddingRight: =0
+                                                PaddingTop: =0
+                                                Size: =11
+                                                Text: |-
+                                                  =nfBi(
+                                                      locTrainingSessionRecord.'Session Language'.EN,
+                                                      locTrainingSessionRecord.'Session Language'.FR
+                                                  )
+                              - session_con_DateInfo:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: AutoLayout
+                                  Properties:
+                                    DropShadow: =DropShadow.None
+                                    Fill: =myTheme.SurfaceSubtle
+                                    FillPortions: =0
+                                    Height: =72
+                                    LayoutAlignItems: =LayoutAlignItems.Center
+                                    LayoutDirection: =LayoutDirection.Horizontal
+                                    LayoutGap: =10
+                                    LayoutMinHeight: =72
+                                    LayoutMinWidth: =0
+                                    PaddingLeft: =12
+                                    PaddingRight: =12
+                                    RadiusBottomLeft: =8
+                                    RadiusBottomRight: =8
+                                    RadiusTopLeft: =8
+                                    RadiusTopRight: =8
+                                  Children:
+                                    - session_ico_Date:
+                                        Control: Classic/Icon@2.5.0
+                                        Properties:
+                                          AccessibleLabel: =nfBi("Session date", "Date de la séance")
+                                          Color: =myTheme.Icons
+                                          Height: =28
+                                          HoverColor: =myTheme.Icons
+                                          Icon: =Icon.CalendarBlank
+                                          LayoutMinHeight: =28
+                                          LayoutMinWidth: =28
+                                          PressedColor: =myTheme.Icons
+                                          TabIndex: =0
+                                          Tooltip: =nfBi("Session date", "Date de la séance")
+                                          Width: =28
+                                    - session_con_DateText:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: AutoLayout
+                                        Properties:
+                                          DropShadow: =DropShadow.None
+                                          Fill: =myTheme.Transparent
+                                          FillPortions: =1
+                                          LayoutDirection: =LayoutDirection.Vertical
+                                          LayoutGap: =0
+                                          LayoutMinHeight: =0
+                                          LayoutMinWidth: =100
+                                        Children:
+                                          - session_lbl_DateHeader:
+                                              Control: Label@2.5.1
+                                              Properties:
+                                                Color: =myTheme.TextMuted
+                                                Fill: =myTheme.Transparent
+                                                Font: =Font.Lato
+                                                FontWeight: =FontWeight.Semibold
+                                                Height: =24
+                                                LayoutMinHeight: =24
+                                                LayoutMinWidth: =0
+                                                PaddingBottom: =0
+                                                PaddingLeft: =0
+                                                PaddingRight: =0
+                                                PaddingTop: =0
+                                                Size: =9
+                                                Text: =nfBi("Date", "Date")
+                                          - session_lbl_DateValue:
+                                              Control: Label@2.5.1
+                                              Properties:
+                                                Color: =myTheme.Text
+                                                Fill: =myTheme.Transparent
+                                                Font: =Font.Lato
+                                                FontWeight: =FontWeight.Bold
+                                                Height: =36
+                                                LayoutMinHeight: =36
+                                                LayoutMinWidth: =0
+                                                PaddingBottom: =0
+                                                PaddingLeft: =0
+                                                PaddingRight: =0
+                                                PaddingTop: =0
+                                                Size: =10
+                                                Text: |-
+                                                  =With(
+                                                      {
+                                                          _showEnd:
+                                                              !IsBlank(locTrainingSessionRecord.'End Date') &&
+                                                              locTrainingSessionRecord.'Start Date' <>
+                                                                  locTrainingSessionRecord.'End Date'
+                                                      },
+                                                      Text(
+                                                          locTrainingSessionRecord.'Start Date',
+                                                          If(
+                                                              ShowFrench,
+                                                              "[$-fr-CA]dddd d mmmm yyyy",
+                                                              "[$-en-CA]dddd, mmmm d, yyyy"
+                                                          )
+                                                      ) &
+                                                      If(
+                                                          _showEnd,
+                                                          nfBi(" to ", " au ") &
+                                                          Text(
+                                                              locTrainingSessionRecord.'End Date',
+                                                              If(
+                                                                  ShowFrench,
+                                                                  "[$-fr-CA]dddd d mmmm yyyy",
+                                                                  "[$-en-CA]dddd, mmmm d, yyyy"
+                                                              )
+                                                          ),
+                                                          ""
+                                                      )
+                                                  )
+                              - session_con_TimeInfo:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: AutoLayout
+                                  Properties:
+                                    DropShadow: =DropShadow.None
+                                    Fill: =myTheme.SurfaceSubtle
+                                    FillPortions: =0
+                                    Height: =64
+                                    LayoutAlignItems: =LayoutAlignItems.Center
+                                    LayoutDirection: =LayoutDirection.Horizontal
+                                    LayoutGap: =10
+                                    LayoutMinHeight: =64
+                                    LayoutMinWidth: =0
+                                    PaddingLeft: =12
+                                    PaddingRight: =12
+                                    RadiusBottomLeft: =8
+                                    RadiusBottomRight: =8
+                                    RadiusTopLeft: =8
+                                    RadiusTopRight: =8
+                                  Children:
+                                    - session_ico_Time:
+                                        Control: Classic/Icon@2.5.0
+                                        Properties:
+                                          AccessibleLabel: =nfBi("Session time", "Heure de la séance")
+                                          Color: =myTheme.Icons
+                                          Height: =28
+                                          HoverColor: =myTheme.Icons
+                                          Icon: =Icon.Clock
+                                          LayoutMinHeight: =28
+                                          LayoutMinWidth: =28
+                                          PressedColor: =myTheme.Icons
+                                          TabIndex: =0
+                                          Tooltip: =nfBi("Session time", "Heure de la séance")
+                                          Width: =28
+                                    - session_con_TimeText:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: AutoLayout
+                                        Properties:
+                                          DropShadow: =DropShadow.None
+                                          Fill: =myTheme.Transparent
+                                          FillPortions: =1
+                                          LayoutDirection: =LayoutDirection.Vertical
+                                          LayoutGap: =0
+                                          LayoutMinHeight: =0
+                                          LayoutMinWidth: =100
+                                        Children:
+                                          - session_lbl_TimeHeader:
+                                              Control: Label@2.5.1
+                                              Properties:
+                                                Color: =myTheme.TextMuted
+                                                Font: =Font.Lato
+                                                FontWeight: =FontWeight.Semibold
+                                                Height: =24
+                                                LayoutMinHeight: =24
+                                                LayoutMinWidth: =0
+                                                PaddingBottom: =0
+                                                PaddingLeft: =0
+                                                PaddingRight: =0
+                                                PaddingTop: =0
+                                                Size: =9
+                                                Text: =nfBi("Time", "Heure")
+                                          - session_lbl_TimeValue:
+                                              Control: Label@2.5.1
+                                              Properties:
+                                                Color: =myTheme.Text
+                                                Font: =Font.Lato
+                                                FontWeight: =FontWeight.Bold
+                                                Height: =26
+                                                LayoutMinHeight: =26
+                                                LayoutMinWidth: =0
+                                                PaddingBottom: =0
+                                                PaddingLeft: =0
+                                                PaddingRight: =0
+                                                PaddingTop: =0
+                                                Size: =10
+                                                Text: |-
+                                                  =Text(
+                                                      locTrainingSessionRecord.'Calendar Start Time',
+                                                      "[$-en-CA]h:mm AM/PM"
+                                                  ) &
+                                                  nfBi(" to ", " à ") &
+                                                  Text(
+                                                      locTrainingSessionRecord.'Calendar End Time',
+                                                      "[$-en-CA]h:mm AM/PM"
+                                                  )
+                              - session_con_LocationInfo:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: AutoLayout
+                                  Properties:
+                                    DropShadow: =DropShadow.None
+                                    Fill: =myTheme.SurfaceSubtle
+                                    FillPortions: =0
+                                    Height: =96
+                                    LayoutAlignItems: =LayoutAlignItems.Start
+                                    LayoutDirection: =LayoutDirection.Horizontal
+                                    LayoutGap: =10
+                                    LayoutMinHeight: =96
+                                    LayoutMinWidth: =0
+                                    PaddingBottom: =10
+                                    PaddingLeft: =12
+                                    PaddingRight: =12
+                                    PaddingTop: =10
+                                    RadiusBottomLeft: =8
+                                    RadiusBottomRight: =8
+                                    RadiusTopLeft: =8
+                                    RadiusTopRight: =8
+                                  Children:
+                                    - session_ico_Location:
+                                        Control: Classic/Icon@2.5.0
+                                        Properties:
+                                          AccessibleLabel: =nfBi("Session location", "Lieu de la séance")
+                                          Color: =myTheme.Icons
+                                          Height: =28
+                                          HoverColor: =myTheme.Icons
+                                          Icon: =Icon.Waypoint
+                                          LayoutMinHeight: =28
+                                          LayoutMinWidth: =28
+                                          PressedColor: =myTheme.Icons
+                                          TabIndex: =0
+                                          Tooltip: =nfBi("Session location", "Lieu de la séance")
+                                          Width: =28
+                                    - session_con_LocationText:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: AutoLayout
+                                        Properties:
+                                          DropShadow: =DropShadow.None
+                                          Fill: =myTheme.Transparent
+                                          FillPortions: =1
+                                          LayoutDirection: =LayoutDirection.Vertical
+                                          LayoutGap: =0
+                                          LayoutMinHeight: =0
+                                          LayoutMinWidth: =100
+                                        Children:
+                                          - session_lbl_LocationHeader:
+                                              Control: Label@2.5.1
+                                              Properties:
+                                                Color: =myTheme.TextMuted
+                                                Font: =Font.Lato
+                                                FontWeight: =FontWeight.Semibold
+                                                Height: =24
+                                                LayoutMinHeight: =24
+                                                LayoutMinWidth: =0
+                                                PaddingBottom: =0
+                                                PaddingLeft: =0
+                                                PaddingRight: =0
+                                                PaddingTop: =0
+                                                Size: =9
+                                                Text: =nfBi("Location", "Lieu")
+                                          - session_lbl_LocationValue:
+                                              Control: Label@2.5.1
+                                              Properties:
+                                                Color: =myTheme.Text
+                                                FillPortions: =1
+                                                Font: =Font.Lato
+                                                Height: =60
+                                                LayoutMinHeight: =52
+                                                LayoutMinWidth: =0
+                                                PaddingBottom: =0
+                                                PaddingLeft: =0
+                                                PaddingRight: =0
+                                                PaddingTop: =0
+                                                Size: =10
+                                                Text: |-
+                                                  =Concat(
+                                                      Filter(
+                                                          Table(
+                                                              {
+                                                                  Value:
+                                                                      If(
+                                                                          locTrainingSessionRecord.'Virtual Delivery' =
+                                                                              'Virtual Delivery (CSC Training Sessions)'.Yes,
+                                                                          nfBi("Virtual", "Virtuelle")
+                                                                      )
+                                                              },
+                                                              {
+                                                                  Value:
+                                                                      locTrainingSessionRecord.'Session Address Line 1' &
+                                                                      If(
+                                                                          !IsBlank(locTrainingSessionRecord.'Session Address Line 2'),
+                                                                          ", " &
+                                                                          locTrainingSessionRecord.'Session Address Line 2',
+                                                                          ""
+                                                                      )
+                                                              },
+                                                              {
+                                                                  Value:
+                                                                      locTrainingSessionRecord.'Session City' &
+                                                                      If(
+                                                                          !IsBlank(locTrainingSessionRecord.'Session Province'.'CSC Lookups ID'),
+                                                                          ", " &
+                                                                          nfBi(
+                                                                              locTrainingSessionRecord.'Session Province'.EN,
+                                                                              locTrainingSessionRecord.'Session Province'.FR
+                                                                          ),
+                                                                          ""
+                                                                      )
+                                                              },
+                                                              {
+                                                                  Value:
+                                                                      locTrainingSessionRecord.'Session Postal Code'
+                                                              }
+                                                          ),
+                                                          !IsBlank(Value)
+                                                      ),
+                                                      Value,
+                                                      Char(10)
+                                                  )
+                                                VerticalAlign: =VerticalAlign.Top
+                              - session_con_DeadlineInfo:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: AutoLayout
+                                  Properties:
+                                    DropShadow: =DropShadow.None
+                                    Fill: |-
+                                      =If(
+                                          locTrainingSessionRecord.'Registration Period End Date' < Today(),
+                                          myTheme.ErrorBackground,
+                                          myTheme.WarningBackground
+                                      )
+                                    FillPortions: =0
+                                    Height: =64
+                                    LayoutAlignItems: =LayoutAlignItems.Center
+                                    LayoutDirection: =LayoutDirection.Horizontal
+                                    LayoutGap: =10
+                                    LayoutMinHeight: =64
+                                    LayoutMinWidth: =0
+                                    PaddingLeft: =12
+                                    PaddingRight: =12
+                                    RadiusBottomLeft: =8
+                                    RadiusBottomRight: =8
+                                    RadiusTopLeft: =8
+                                    RadiusTopRight: =8
+                                  Children:
+                                    - session_ico_Deadline:
+                                        Control: Classic/Icon@2.5.0
+                                        Properties:
+                                          AccessibleLabel: =nfBi("Registration deadline", "Date limite d'inscription")
+                                          Color: |-
+                                            =If(
+                                                locTrainingSessionRecord.'Registration Period End Date' < Today(),
+                                                myTheme.ErrorBackgroundText,
+                                                myTheme.WarningBackgroundText
+                                            )
+                                          Height: =28
+                                          Icon: =Icon.Lock
+                                          LayoutMinHeight: =28
+                                          LayoutMinWidth: =28
+                                          TabIndex: =0
+                                          Tooltip: =nfBi("Registration deadline", "Date limite d'inscription")
+                                          Width: =28
+                                    - session_con_DeadlineText:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: AutoLayout
+                                        Properties:
+                                          DropShadow: =DropShadow.None
+                                          Fill: =myTheme.Transparent
+                                          FillPortions: =1
+                                          LayoutDirection: =LayoutDirection.Vertical
+                                          LayoutGap: =0
+                                          LayoutMinHeight: =0
+                                          LayoutMinWidth: =100
+                                        Children:
+                                          - session_lbl_DeadlineHeader:
+                                              Control: Label@2.5.1
+                                              Properties:
+                                                Color: |-
+                                                  =If(
+                                                      locTrainingSessionRecord.'Registration Period End Date' < Today(),
+                                                      myTheme.ErrorBackgroundText,
+                                                      myTheme.WarningBackgroundText
+                                                  )
+                                                Font: =Font.Lato
+                                                FontWeight: =FontWeight.Semibold
+                                                Height: =24
+                                                LayoutMinHeight: =24
+                                                LayoutMinWidth: =0
+                                                PaddingBottom: =0
+                                                PaddingLeft: =0
+                                                PaddingRight: =0
+                                                PaddingTop: =0
+                                                Size: =9
+                                                Text: =nfBi("Registration deadline", "Date limite d'inscription")
+                                          - session_lbl_DeadlineValue:
+                                              Control: Label@2.5.1
+                                              Properties:
+                                                Color: |-
+                                                  =If(
+                                                      locTrainingSessionRecord.'Registration Period End Date' < Today(),
+                                                      myTheme.ErrorBackgroundText,
+                                                      myTheme.WarningBackgroundText
+                                                  )
+                                                Font: =Font.Lato
+                                                FontWeight: =FontWeight.Bold
+                                                Height: =26
+                                                LayoutMinHeight: =26
+                                                LayoutMinWidth: =0
+                                                PaddingBottom: =0
+                                                PaddingLeft: =0
+                                                PaddingRight: =0
+                                                PaddingTop: =0
+                                                Size: =10
+                                                Text: |-
+                                                  =Text(
+                                                      locTrainingSessionRecord.'Registration Period End Date',
+                                                      If(
+                                                          ShowFrench,
+                                                          "[$-fr-CA]dddd d mmmm yyyy",
+                                                          "[$-en-CA]dddd, mmmm d, yyyy"
+                                                      )
+                                                  )
+                              - session_con_CoordinatorInfo:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: AutoLayout
+                                  Properties:
+                                    DropShadow: =DropShadow.None
+                                    Fill: =myTheme.InformationBackground
+                                    FillPortions: =0
+                                    Height: =72
+                                    LayoutAlignItems: =LayoutAlignItems.Center
+                                    LayoutDirection: =LayoutDirection.Horizontal
+                                    LayoutGap: =10
+                                    LayoutMinHeight: =72
+                                    LayoutMinWidth: =0
+                                    PaddingLeft: =12
+                                    PaddingRight: =12
+                                    RadiusBottomLeft: =8
+                                    RadiusBottomRight: =8
+                                    RadiusTopLeft: =8
+                                    RadiusTopRight: =8
+                                  Children:
+                                    - session_ico_Coordinator:
+                                        Control: Classic/Icon@2.5.0
+                                        Properties:
+                                          AccessibleLabel: =nfBi("Coordinator", "Coordonnateur")
+                                          Color: =myTheme.InformationBackgroundText
+                                          Height: =28
+                                          HoverColor: =myTheme.InformationBackgroundText
+                                          Icon: =Icon.Mail
+                                          LayoutMinHeight: =28
+                                          LayoutMinWidth: =28
+                                          OnSelect: |-
+                                            =Launch(
+                                                "mailto:" &
+                                                locTrainingSessionRecord.'Coordinator Email' &
+                                                "?subject=" &
+                                                EncodeUrl(
+                                                    locTrainingSessionRecord.'Coordinating Regional Campus'.Code &
+                                                    " | " &
+                                                    locTrainingSessionRecord.Course.Code &
+                                                    " | " &
+                                                    Text(
+                                                        locTrainingSessionRecord.'Start Date',
+                                                        "yyyy-mm-dd"
+                                                    )
+                                                )
+                                            )
+                                          PressedColor: =myTheme.InformationBackgroundText
+                                          TabIndex: =0
+                                          Tooltip: =nfBi("Email the coordinator", "Envoyer un courriel au coordonnateur")
+                                          Width: =28
+                                    - session_con_CoordinatorText:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: AutoLayout
+                                        Properties:
+                                          DropShadow: =DropShadow.None
+                                          Fill: =myTheme.Transparent
+                                          FillPortions: =1
+                                          LayoutDirection: =LayoutDirection.Vertical
+                                          LayoutGap: =0
+                                          LayoutMinHeight: =0
+                                          LayoutMinWidth: =100
+                                        Children:
+                                          - session_lbl_CoordinatorHeader:
+                                              Control: Label@2.5.1
+                                              Properties:
+                                                Color: =myTheme.InformationBackgroundText
+                                                Font: =Font.Lato
+                                                FontWeight: =FontWeight.Semibold
+                                                Height: =24
+                                                LayoutMinHeight: =24
+                                                LayoutMinWidth: =0
+                                                PaddingBottom: =0
+                                                PaddingLeft: =0
+                                                PaddingRight: =0
+                                                PaddingTop: =0
+                                                Size: =9
+                                                Text: =nfBi("Coordinator", "Coordonnateur")
+                                          - session_btn_Coordinator:
+                                              Control: Classic/Button@2.2.0
+                                              Properties:
+                                                Align: =Align.Left
+                                                BorderStyle: =BorderStyle.None
+                                                BorderThickness: =0
+                                                Color: =myTheme.InformationBackgroundText
+                                                Fill: =myTheme.Transparent
+                                                Font: =Font.Lato
+                                                FontWeight: =FontWeight.Bold
+                                                Height: =28
+                                                HoverColor: =myTheme.InformationBackgroundText
+                                                HoverFill: =myTheme.OverlayHover
+                                                LayoutMinHeight: =28
+                                                LayoutMinWidth: =100
+                                                OnSelect: |-
+                                                  =Launch(
+                                                      "mailto:" &
+                                                      locTrainingSessionRecord.'Coordinator Email' &
+                                                      "?subject=" &
+                                                      EncodeUrl(
+                                                          locTrainingSessionRecord.'Coordinating Regional Campus'.Code &
+                                                          " | " &
+                                                          locTrainingSessionRecord.Course.Code &
+                                                          " | " &
+                                                          Text(
+                                                              locTrainingSessionRecord.'Start Date',
+                                                              "yyyy-mm-dd"
+                                                          )
+                                                      )
+                                                  )
+                                                PaddingBottom: =0
+                                                PaddingLeft: =0
+                                                PaddingRight: =0
+                                                PaddingTop: =0
+                                                PressedColor: =myTheme.InformationBackgroundText
+                                                PressedFill: =myTheme.OverlayPressed
+                                                Size: =10
+                                                Text: =locTrainingSessionRecord.'Coordinator Name'
+                                                Tooltip: =locTrainingSessionRecord.'Coordinator Email'
+                        - session_con_RegistrationWorkspace:
+                            Control: GroupContainer@1.5.0
+                            Variant: AutoLayout
+                            Properties:
+                              DropShadow: =DropShadow.None
+                              Fill: =myTheme.Surface
+                              FillPortions: =1
+                              LayoutDirection: =LayoutDirection.Vertical
+                              LayoutGap: =8
+                              LayoutMinHeight: =400
+                              LayoutMinWidth: =480
+                              PaddingBottom: =12
+                              PaddingLeft: =12
+                              PaddingRight: =12
+                              PaddingTop: =12
+                              RadiusBottomLeft: =12
+                              RadiusBottomRight: =12
+                              RadiusTopLeft: =12
+                              RadiusTopRight: =12
+                            Children:
+                              - session_con_RegistrationHeader:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: AutoLayout
+                                  Properties:
+                                    DropShadow: =DropShadow.None
+                                    Fill: =myTheme.Transparent
+                                    FillPortions: =0
+                                    Height: =48
+                                    LayoutAlignItems: =LayoutAlignItems.Center
+                                    LayoutDirection: =LayoutDirection.Horizontal
+                                    LayoutGap: =8
+                                    LayoutMinHeight: =48
+                                    LayoutMinWidth: =0
+                                  Children:
+                                    - session_lbl_RegistrationHeading:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          Color: =myTheme.Text
+                                          Fill: =myTheme.Transparent
+                                          FillPortions: =1
+                                          Font: =Font.Lato
+                                          FontWeight: =FontWeight.Bold
+                                          Height: =38
+                                          LayoutMinHeight: =38
+                                          LayoutMinWidth: =180
+                                          PaddingBottom: =0
+                                          PaddingLeft: =0
+                                          PaddingRight: =0
+                                          PaddingTop: =0
+                                          Size: =16
+                                          Text: =nfBi("Registration management", "Gestion des inscriptions")
+                                    - session_lbl_ChangeCount:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          Align: =Align.Center
+                                          Color: =myTheme.WarningBackgroundText
+                                          Fill: =myTheme.WarningBackground
+                                          Font: =Font.Lato
+                                          FontWeight: =FontWeight.Bold
+                                          Height: =28
+                                          LayoutMinHeight: =28
+                                          LayoutMinWidth: =110
+                                          PaddingBottom: =0
+                                          PaddingLeft: =8
+                                          PaddingRight: =8
+                                          PaddingTop: =0
+                                          RadiusBottomLeft: =6
+                                          RadiusBottomRight: =6
+                                          RadiusTopLeft: =6
+                                          RadiusTopRight: =6
+                                          Size: =9
+                                          Text: |-
+                                            =With(
+                                                {
+                                                    _count:
+                                                        CountIf(
+                                                            locSessionRegistrati0ns As _record,
+                                                            Lower(Trim(_record.hrbds_registrantemail)) <>
+                                                                Lower(Trim(_record.UpdatedRegistrantEmail)) ||
+                                                            _record.hrbds_cscdistrictsdivisionsid <>
+                                                                _record.OriginalDistrictDivisionID ||
+                                                            _record.AssignedWorkArea <>
+                                                                _record.OriginalAssignedWorkArea
+                                                        )
+                                                },
+                                                nfBi(
+                                                    _count & " unsaved",
+                                                    _count & " non sauvegardé(s)"
+                                                )
+                                            )
+                                          Visible: |-
+                                            =CountIf(
+                                                locSessionRegistrati0ns As _record,
+                                                Lower(Trim(_record.hrbds_registrantemail)) <>
+                                                    Lower(Trim(_record.UpdatedRegistrantEmail)) ||
+                                                _record.hrbds_cscdistrictsdivisionsid <>
+                                                    _record.OriginalDistrictDivisionID ||
+                                                _record.AssignedWorkArea <>
+                                                    _record.OriginalAssignedWorkArea
+                                            ) > 0
+                                          Width: =130
+                              - session_con_ViewSelector:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: AutoLayout
+                                  Properties:
+                                    DropShadow: =DropShadow.None
+                                    Fill: =myTheme.SurfaceSubtle
+                                    FillPortions: =0
+                                    Height: =46
+                                    LayoutAlignItems: =LayoutAlignItems.Center
+                                    LayoutDirection: =LayoutDirection.Horizontal
+                                    LayoutGap: =6
+                                    LayoutMinHeight: =46
+                                    LayoutMinWidth: =0
+                                    PaddingBottom: =4
+                                    PaddingLeft: =4
+                                    PaddingRight: =4
+                                    PaddingTop: =4
+                                    RadiusBottomLeft: =8
+                                    RadiusBottomRight: =8
+                                    RadiusTopLeft: =8
+                                    RadiusTopRight: =8
+                                  Children:
+                                    - session_btn_RegistrationsView:
+                                        Control: Classic/Button@2.2.0
+                                        Properties:
+                                          BorderColor: =If(locSessionSelectedView = "REGISTRATIONS", myTheme.Selection, myTheme.Transparent)
+                                          BorderThickness: =1
+                                          Color: =If(locSessionSelectedView = "REGISTRATIONS", myTheme.SelectionText, myTheme.Text)
+                                          Fill: =If(locSessionSelectedView = "REGISTRATIONS", myTheme.Selection, myTheme.Transparent)
+                                          FillPortions: =1
+                                          FocusedBorderColor: =myTheme.Focus
+                                          FocusedBorderThickness: =2
+                                          Font: =Font.Lato
+                                          FontWeight: =FontWeight.Bold
+                                          Height: =38
+                                          HoverBorderColor: =myTheme.SelectionHover
+                                          HoverColor: =myTheme.SelectionText
+                                          HoverFill: =myTheme.SelectionHover
+                                          LayoutMinHeight: =38
+                                          LayoutMinWidth: =130
+                                          OnSelect: =UpdateContext({locSessionSelectedView: "REGISTRATIONS"})
+                                          PressedBorderColor: =myTheme.SelectionPressed
+                                          PressedColor: =myTheme.SelectionText
+                                          PressedFill: =myTheme.SelectionPressed
+                                          RadiusBottomLeft: =6
+                                          RadiusBottomRight: =6
+                                          RadiusTopLeft: =6
+                                          RadiusTopRight: =6
+                                          Size: =10
+                                          Text: |-
+                                            =nfBi("Registrations", "Inscriptions") &
+                                            " (" &
+                                            CountIf(
+                                                locSessionRegistrati0ns,
+                                                RegistrationStatus.hrbds_mappingcode <>
+                                                    "REGISTRATION_STATUS-WAITLIST"
+                                            ) &
+                                            ")"
+                                          Tooltip: =nfBi("Show registrations", "Afficher les inscriptions")
+                                    - session_btn_WaitlistView:
+                                        Control: Classic/Button@2.2.0
+                                        Properties:
+                                          BorderColor: =If(locSessionSelectedView = "WAITLIST", myTheme.Selection, myTheme.Transparent)
+                                          BorderThickness: =1
+                                          Color: =If(locSessionSelectedView = "WAITLIST", myTheme.SelectionText, myTheme.Text)
+                                          Fill: =If(locSessionSelectedView = "WAITLIST", myTheme.Selection, myTheme.Transparent)
+                                          FillPortions: =1
+                                          FocusedBorderColor: =myTheme.Focus
+                                          FocusedBorderThickness: =2
+                                          Font: =Font.Lato
+                                          FontWeight: =FontWeight.Bold
+                                          Height: =38
+                                          HoverBorderColor: =myTheme.SelectionHover
+                                          HoverColor: =myTheme.SelectionText
+                                          HoverFill: =myTheme.SelectionHover
+                                          LayoutMinHeight: =38
+                                          LayoutMinWidth: =130
+                                          OnSelect: =UpdateContext({locSessionSelectedView: "WAITLIST"})
+                                          PressedBorderColor: =myTheme.SelectionPressed
+                                          PressedColor: =myTheme.SelectionText
+                                          PressedFill: =myTheme.SelectionPressed
+                                          RadiusBottomLeft: =6
+                                          RadiusBottomRight: =6
+                                          RadiusTopLeft: =6
+                                          RadiusTopRight: =6
+                                          Size: =10
+                                          Text: |-
+                                            =nfBi("Waitlist", "Liste d'attente") &
+                                            " (" &
+                                            CountIf(
+                                                locSessionRegistrati0ns,
+                                                RegistrationStatus.hrbds_mappingcode =
+                                                    "REGISTRATION_STATUS-WAITLIST"
+                                            ) &
+                                            ")"
+                                          Tooltip: =nfBi("Show the waitlist", "Afficher la liste d'attente")
+                              - session_gal_Registrations:
+                                  Control: Gallery@2.15.0
+                                  Variant: Vertical
+                                  Properties:
+                                    AccessibleLabel: |-
+                                      =If(
+                                          locSessionSelectedView = "WAITLIST",
+                                          nfBi("Session waitlist", "Liste d'attente de la séance"),
+                                          nfBi("Session registrations", "Inscriptions à la séance")
+                                      )
+                                    BorderColor: =myTheme.Transparent
+                                    Fill: =myTheme.Transparent
+                                    FillPortions: =1
+                                    Items: |-
+                                      =SortByColumns(
+                                          AddColumns(
+                                              Filter(
+                                                  locSessionRegistrati0ns As _registration,
+                                                  If(
+                                                      locSessionSelectedView = "WAITLIST",
+                                                      _registration.RegistrationStatus.hrbds_mappingcode =
+                                                          "REGISTRATION_STATUS-WAITLIST",
+                                                      _registration.RegistrationStatus.hrbds_mappingcode <>
+                                                          "REGISTRATION_STATUS-WAITLIST"
+                                                  )
+                                              ) As _record,
+                                              AssignedAreaDisplayText,
+                                                  _record.RegionalCampusCode &
+                                                  " " &
+                                                  Coalesce(
+                                                      nfBi(
+                                                          _record.DistrictDivisionEN,
+                                                          _record.DistrictDivisionFR
+                                                      ),
+                                                      "zzzz"
+                                                  ),
+                                              RegistrationStatusDisplayText,
+                                                  nfBi(
+                                                      _record.RegistrationStatus.hrbds_labelen,
+                                                      _record.RegistrationStatus.hrbds_labelfr
+                                                  ),
+                                              RegistrationStatusDisplayOrder,
+                                                  _record.RegistrationStatus.hrbds_customsortorder,
+                                              RegistrantFullName,
+                                                  If(
+                                                      !IsBlank(_record.hrbds_registrantlastname),
+                                                      Upper(_record.hrbds_registrantlastname) &
+                                                      ", " &
+                                                      _record.hrbds_registrantfirstname
+                                                  ),
+                                              HasChanges,
+                                                  Lower(Trim(_record.hrbds_registrantemail)) <>
+                                                      Lower(Trim(_record.UpdatedRegistrantEmail)) ||
+                                                  _record.hrbds_cscdistrictsdivisionsid <>
+                                                      _record.OriginalDistrictDivisionID ||
+                                                  _record.AssignedWorkArea <>
+                                                      _record.OriginalAssignedWorkArea
+                                          ),
+                                          locSortCourseListColumn,
+                                          locSortType
+                                      )
+                                    LayoutMinHeight: =260
+                                    LayoutMinWidth: =0
+                                    TemplateFill: =myTheme.Transparent
+                                    TemplatePadding: =5
+                                    TemplateSize: =158
+                                  Children:
+                                    - session_btn_RegistrationCard:
+                                        Control: Classic/Button@2.2.0
+                                        Properties:
+                                          BorderColor: =If(ThisItem.HasChanges, myTheme.Warning, myTheme.Border)
+                                          BorderStyle: =BorderStyle.Solid
+                                          BorderThickness: =If(ThisItem.HasChanges, 2, 1)
+                                          Color: =myTheme.Transparent
+                                          Fill: =If(ThisItem.HasChanges, myTheme.WarningBackground, myTheme.Card)
+                                          FocusedBorderColor: =myTheme.Focus
+                                          FocusedBorderThickness: =2
+                                          Height: =Parent.TemplateHeight - Parent.TemplatePadding
+                                          HoverBorderColor: =myTheme.SelectionHover
+                                          HoverFill: =myTheme.SurfaceHover
+                                          OnSelect: =UpdateContext({locSessionSelectedRegistration: ThisItem})
+                                          PressedBorderColor: =myTheme.SelectionPressed
+                                          PressedFill: =myTheme.SelectionBackground
+                                          RadiusBottomLeft: =8
+                                          RadiusBottomRight: =8
+                                          RadiusTopLeft: =8
+                                          RadiusTopRight: =8
+                                          Text: =""
+                                          Tooltip: |-
+                                            =nfBi(
+                                                "Select registration for " & Coalesce(ThisItem.UpdatedRegistrantFullName, "unassigned seat"),
+                                                "Sélectionner l'inscription de " & Coalesce(ThisItem.UpdatedRegistrantFullName, "place non attribuée")
+                                            )
+                                          Width: =Parent.TemplateWidth
+                                    - session_lbl_RegistrationRegion:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          Align: =Align.Center
+                                          Color: =myTheme.InformationBackgroundText
+                                          Fill: =myTheme.InformationBackground
+                                          Font: =Font.Lato
+                                          FontWeight: =FontWeight.Bold
+                                          Height: =24
+                                          PaddingBottom: =0
+                                          PaddingLeft: =6
+                                          PaddingRight: =6
+                                          PaddingTop: =0
+                                          RadiusBottomLeft: =6
+                                          RadiusBottomRight: =6
+                                          RadiusTopLeft: =6
+                                          RadiusTopRight: =6
+                                          Size: =9
+                                          Text: =Coalesce(ThisItem.RegionalCampusCode, "–")
+                                          Width: =70
+                                          X: =12
+                                          Y: =10
+                                    - session_lbl_RegistrationStatus:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          Align: =Align.Center
+                                          Color: |-
+                                            =If(
+                                                ThisItem.HasChanges,
+                                                myTheme.WarningBackgroundText,
+                                                Switch(
+                                                    ThisItem.RegistrationStatus.hrbds_mappingcode,
+                                                    "REGISTRATION_STATUS-ATTENDED", myTheme.SuccessBackgroundText,
+                                                    "REGISTRATION_STATUS-NO_SHOW", myTheme.ErrorBackgroundText,
+                                                    "REGISTRATION_STATUS-CANCELLATION", myTheme.ErrorBackgroundText,
+                                                    "REGISTRATION_STATUS-WAITLIST", myTheme.InformationBackgroundText,
+                                                    myTheme.InformationBackgroundText
+                                                )
+                                            )
+                                          Fill: |-
+                                            =If(
+                                                ThisItem.HasChanges,
+                                                myTheme.WarningBackground,
+                                                Switch(
+                                                    ThisItem.RegistrationStatus.hrbds_mappingcode,
+                                                    "REGISTRATION_STATUS-ATTENDED", myTheme.SuccessBackground,
+                                                    "REGISTRATION_STATUS-NO_SHOW", myTheme.ErrorBackground,
+                                                    "REGISTRATION_STATUS-CANCELLATION", myTheme.ErrorBackground,
+                                                    "REGISTRATION_STATUS-WAITLIST", myTheme.InformationBackground,
+                                                    myTheme.InformationBackground
+                                                )
+                                            )
+                                          Font: =Font.Lato
+                                          FontWeight: =FontWeight.Bold
+                                          Height: =24
+                                          PaddingBottom: =0
+                                          PaddingLeft: =6
+                                          PaddingRight: =6
+                                          PaddingTop: =0
+                                          RadiusBottomLeft: =6
+                                          RadiusBottomRight: =6
+                                          RadiusTopLeft: =6
+                                          RadiusTopRight: =6
+                                          Size: =9
+                                          Text: |-
+                                            =If(
+                                                ThisItem.HasChanges,
+                                                nfBi("Unsaved", "Non sauvegardé"),
+                                                ThisItem.RegistrationStatusDisplayText
+                                            )
+                                          Width: =130
+                                          X: =Parent.TemplateWidth - Self.Width - 12
+                                          Y: =10
+                                    - session_lbl_RegistrantName:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          Color: =myTheme.Text
+                                          Font: =Font.Lato
+                                          FontWeight: =FontWeight.Bold
+                                          Height: =32
+                                          PaddingBottom: =0
+                                          PaddingLeft: =0
+                                          PaddingRight: =0
+                                          PaddingTop: =0
+                                          Size: =11
+                                          Text: |-
+                                            =Coalesce(
+                                                ThisItem.UpdatedRegistrantFullName,
+                                                nfBi("Unassigned seat", "Place non attribuée")
+                                            )
+                                          Width: =Parent.TemplateWidth - 190
+                                          X: =92
+                                          Y: =6
+                                    - session_lbl_AssignedArea:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          Color: =myTheme.TextMuted
+                                          Font: =Font.Lato
+                                          Height: =24
+                                          PaddingBottom: =0
+                                          PaddingLeft: =0
+                                          PaddingRight: =0
+                                          PaddingTop: =0
+                                          Size: =9
+                                          Text: |-
+                                            =Coalesce(
+                                                nfBi(
+                                                    ThisItem.DistrictDivisionEN,
+                                                    ThisItem.DistrictDivisionFR
+                                                ),
+                                                nfBi("No district assigned", "Aucun district attribué")
+                                            ) &
+                                            " · " &
+                                            Coalesce(
+                                                ThisItem.AssignedWorkArea,
+                                                nfBi("No work area", "Aucune zone de travail")
+                                            )
+                                          Width: =Parent.TemplateWidth - 24
+                                          X: =12
+                                          Y: =41
+                                    - session_cmb_AssignedRegion:
+                                        Control: Classic/ComboBox@2.4.0
+                                        Properties:
+                                          AccessibleLabel: =nfBi("Assigned region", "Région attribuée")
+                                          BorderColor: =myTheme.Border
+                                          BorderThickness: =1
+                                          ChevronBackground: =myTheme.Secondary
+                                          ChevronFill: =myTheme.SecondaryText
+                                          Color: =myTheme.InputText
+                                          DefaultSelectedItems: |-
+                                            =Filter(
+                                                'CSC Regional Campuses',
+                                                'CSC Regional Campuses ID' =
+                                                    ThisItem.hrbds_cscregionalcampusesid
+                                            )
+                                          DisplayFields: =["hrbds_code"]
+                                          DisplayMode: |-
+                                            =If(
+                                                IsBlank(ThisItem.OriginalRegionalCampusCode) &&
+                                                locTrainingSessionRecord.'Registration Period End Date' >= Today(),
+                                                DisplayMode.Edit,
+                                                DisplayMode.View
+                                            )
+                                          Fill: =myTheme.Input
+                                          FocusedBorderColor: =myTheme.Focus
+                                          FocusedBorderThickness: =2
+                                          Font: =Font.Lato
+                                          Height: =34
+                                          InputTextPlaceholder: =nfBi("Region", "Région")
+                                          IsSearchable: =false
+                                          Items: |-
+                                            =SortByColumns(
+                                                Filter(
+                                                    'CSC Regional Campuses',
+                                                    'CSC Regional Campuses ID' in nfClientRegions ||
+                                                    'CSC Regional Campuses ID' in nfUserRegions[@RegionID]
+                                                ),
+                                                "hrbds_code",
+                                                SortOrder.Ascending
+                                            )
+                                          OnChange: |-
+                                            =If(
+                                                IsBlank(Self.Selected.'CSC Regional Campuses ID'),
+                                                UpdateIf(
+                                                    locSessionRegistrati0ns,
+                                                    hrbds_csctrainingsessionregistrationid =
+                                                        ThisItem.hrbds_csctrainingsessionregistrationid,
+                                                    {
+                                                        UpdatedRegistrantFirstName: Blank(),
+                                                        UpdatedRegistrantLastName: Blank(),
+                                                        UpdatedRegistrantFullName: Blank(),
+                                                        UpdatedRegistrantEmail: Blank(),
+                                                        hrbds_cscdistrictsdivisionsid: Blank(),
+                                                        DistrictDivisionEN: Blank(),
+                                                        DistrictDivisionFR: Blank(),
+                                                        hrbds_cscregionalcampusesid: Blank(),
+                                                        RegionalCampusCode: Blank()
+                                                    }
+                                                ),
+                                                UpdateIf(
+                                                    locSessionRegistrati0ns,
+                                                    hrbds_csctrainingsessionregistrationid =
+                                                        ThisItem.hrbds_csctrainingsessionregistrationid,
+                                                    {
+                                                        hrbds_cscregionalcampusesid:
+                                                            Self.Selected.'CSC Regional Campuses ID',
+                                                        RegionalCampusCode:
+                                                            Self.Selected.Code
+                                                    }
+                                                )
+                                            )
+                                          SearchFields: =["hrbds_code"]
+                                          SelectMultiple: =false
+                                          SelectionColor: =myTheme.SelectionText
+                                          SelectionFill: =myTheme.Selection
+                                          Size: =9
+                                          Tooltip: =nfBi("Assigned region", "Région attribuée")
+                                          Width: =82
+                                          X: =12
+                                          Y: =72
+                                    - session_cmb_AssignedDistrict:
+                                        Control: Classic/ComboBox@2.4.0
+                                        Properties:
+                                          AccessibleLabel: =nfBi("Assigned district or division", "District ou division attribué")
+                                          BorderColor: =myTheme.Border
+                                          BorderThickness: =1
+                                          ChevronBackground: =myTheme.Secondary
+                                          ChevronFill: =myTheme.SecondaryText
+                                          Color: =myTheme.InputText
+                                          DefaultSelectedItems: |-
+                                            =Filter(
+                                                AddColumns(
+                                                    'CSC Districts Divisions',
+                                                    DisplayValue,
+                                                    nfBi(EN, FR)
+                                                ),
+                                                'CSC Districts Divisions ID' =
+                                                    ThisItem.hrbds_cscdistrictsdivisionsid
+                                            )
+                                          DisplayFields: =["DisplayValue"]
+                                          DisplayMode: |-
+                                            =If(
+                                                locTrainingSessionRecord.'Registration Period End Date' >= Today() &&
+                                                IsBlank(ThisItem.OriginalDistrictDivisionID),
+                                                DisplayMode.Edit,
+                                                DisplayMode.View
+                                            )
+                                          Fill: =myTheme.Input
+                                          FocusedBorderColor: =myTheme.Focus
+                                          FocusedBorderThickness: =2
+                                          Font: =Font.Lato
+                                          Height: =34
+                                          InputTextPlaceholder: =nfBi("District", "District")
+                                          Items: |-
+                                            =SortByColumns(
+                                                AddColumns(
+                                                    Filter(
+                                                        'CSC Districts Divisions',
+                                                        'CSC Districts Divisions ID' in nfUserDistricts[@DistrictID] ||
+                                                        'Regional Campus'.'CSC Regional Campuses ID' in nfUserRegions[@RegionID],
+                                                        'Regional Campus'.'CSC Regional Campuses ID' =
+                                                            session_cmb_AssignedRegion.Selected.'CSC Regional Campuses ID'
+                                                    ),
+                                                    DisplayValue,
+                                                    nfBi(EN, FR)
+                                                ),
+                                                "DisplayValue",
+                                                SortOrder.Ascending
+                                            )
+                                          OnChange: |-
+                                            =If(
+                                                Self.Selected.'CSC Districts Divisions ID' <>
+                                                    ThisItem.hrbds_cscdistrictsdivisionsid,
+                                                UpdateIf(
+                                                    locSessionRegistrati0ns,
+                                                    hrbds_csctrainingsessionregistrationid =
+                                                        ThisItem.hrbds_csctrainingsessionregistrationid,
+                                                    {
+                                                        hrbds_cscdistrictsdivisionsid:
+                                                            Self.Selected.'CSC Districts Divisions ID',
+                                                        DistrictDivisionEN:
+                                                            Self.Selected.EN,
+                                                        DistrictDivisionFR:
+                                                            Self.Selected.FR,
+                                                        UpdatedRegistrantFirstName: Blank(),
+                                                        UpdatedRegistrantLastName: Blank(),
+                                                        UpdatedRegistrantFullName: Blank(),
+                                                        UpdatedRegistrantEmail: Blank()
+                                                    }
+                                                )
+                                            )
+                                          SearchFields: =["DisplayValue"]
+                                          SelectMultiple: =false
+                                          SelectionColor: =myTheme.SelectionText
+                                          SelectionFill: =myTheme.Selection
+                                          Size: =9
+                                          Tooltip: =nfBi("Assigned district or division", "District ou division attribué")
+                                          Width: =Min(180, Parent.TemplateWidth * 0.22)
+                                          X: =102
+                                          Y: =72
+                                    - session_txt_AssignedWorkArea:
+                                        Control: Classic/TextInput@2.3.2
+                                        Properties:
+                                          AccessibleLabel: =nfBi("Assigned work area", "Zone de travail attribuée")
+                                          BorderColor: =myTheme.Border
+                                          BorderThickness: =1
+                                          Color: =myTheme.InputText
+                                          Default: =ThisItem.AssignedWorkArea
+                                          DisplayMode: |-
+                                            =If(
+                                                locTrainingSessionRecord.'Registration Period End Date' >= Today() &&
+                                                IsBlank(ThisItem.OriginalAssignedWorkArea),
+                                                DisplayMode.Edit,
+                                                DisplayMode.View
+                                            )
+                                          Fill: =myTheme.Input
+                                          FocusedBorderColor: =myTheme.Focus
+                                          FocusedBorderThickness: =2
+                                          Font: =Font.Lato
+                                          Height: =34
+                                          HintText: =nfBi("Work area", "Zone de travail")
+                                          MaxLength: =100
+                                          OnChange: |-
+                                            =If(
+                                                Trim(Self.Text) <> Trim(ThisItem.AssignedWorkArea),
+                                                UpdateIf(
+                                                    locSessionRegistrati0ns,
+                                                    hrbds_csctrainingsessionregistrationid =
+                                                        ThisItem.hrbds_csctrainingsessionregistrationid,
+                                                    {
+                                                        AssignedWorkArea:
+                                                            Trim(Self.Text)
+                                                    }
+                                                )
+                                            )
+                                          PaddingLeft: =8
+                                          RadiusBottomLeft: =6
+                                          RadiusBottomRight: =6
+                                          RadiusTopLeft: =6
+                                          RadiusTopRight: =6
+                                          Size: =9
+                                          Tooltip: =nfBi("Assigned work area", "Zone de travail attribuée")
+                                          Width: =Min(155, Parent.TemplateWidth * 0.2)
+                                          X: =session_cmb_AssignedDistrict.X + session_cmb_AssignedDistrict.Width + 8
+                                          Y: =72
+                                    - session_cmb_Registrant:
+                                        Control: Classic/ComboBox@2.4.0
+                                        Properties:
+                                          AccessibleLabel: =nfBi("Registrant", "Participant")
+                                          BorderColor: =myTheme.Border
+                                          BorderThickness: =1
+                                          ChevronBackground: =myTheme.Secondary
+                                          ChevronFill: =myTheme.SecondaryText
+                                          Color: =myTheme.InputText
+                                          DefaultSelectedItems: |-
+                                            =Table(
+                                                {
+                                                    PrimaryDisplayText:
+                                                        ThisItem.UpdatedRegistrantFullName,
+                                                    UserPrincipalName:
+                                                        ThisItem.UpdatedRegistrantEmail
+                                                }
+                                            )
+                                          DisplayFields: =["PrimaryDisplayText", "SecondaryDisplayText"]
+                                          DisplayMode: |-
+                                            =If(
+                                                IsBlank(session_cmb_AssignedDistrict.Selected.DisplayValue) ||
+                                                IsBlank(Trim(session_txt_AssignedWorkArea.Text)),
+                                                DisplayMode.Disabled,
+                                                locTrainingSessionRecord.'Registration Period End Date' >= Today() &&
+                                                IsBlank(Self.Selected.PrimaryDisplayText),
+                                                DisplayMode.Edit,
+                                                DisplayMode.View
+                                            )
+                                          Fill: =myTheme.Input
+                                          FocusedBorderColor: =myTheme.Focus
+                                          FocusedBorderThickness: =2
+                                          Font: =Font.Lato
+                                          Height: =34
+                                          InputTextPlaceholder: =nfBi("Search for an employee", "Rechercher un employé")
+                                          Items: |-
+                                            =If(
+                                                !IsBlank(Self.SearchText),
+                                                SortByColumns(
+                                                    AddColumns(
+                                                        ShowColumns(
+                                                            Filter(
+                                                                Office365Users.SearchUser(
+                                                                    {
+                                                                        searchTerm:
+                                                                            Self.SearchText
+                                                                    }
+                                                                ),
+                                                                CompanyName = "CBSA-ASFC" &&
+                                                                AccountEnabled = true
+                                                            ),
+                                                            DisplayName,
+                                                            GivenName,
+                                                            Surname,
+                                                            JobTitle,
+                                                            Department,
+                                                            MailNickname,
+                                                            UserPrincipalName
+                                                        ),
+                                                        PrimaryDisplayText,
+                                                            DisplayName &
+                                                            " (" &
+                                                            Lower(MailNickname) &
+                                                            ")",
+                                                        SecondaryDisplayText,
+                                                            JobTitle &
+                                                            If(
+                                                                !IsBlank(JobTitle) &&
+                                                                !IsBlank(Department),
+                                                                ", ",
+                                                                ""
+                                                            ) &
+                                                            Department
+                                                    ),
+                                                    "PrimaryDisplayText",
+                                                    SortOrder.Ascending
+                                                )
+                                            )
+                                          OnChange: |-
+                                            =If(
+                                                IsBlank(
+                                                    ThisItem.hrbds_csctrainingsessionregistrationid
+                                                ) &&
+                                                !IsBlank(Self.Selected.UserPrincipalName),
+                                                Collect(
+                                                    locSessionRegistrati0ns,
+                                                    {
+                                                        hrbds_csctrainingsessionregistrationid:
+                                                            GUID(),
+                                                        RegistrationStatus:
+                                                            LookUp(
+                                                                nfLookups,
+                                                                hrbds_mappingcode =
+                                                                    "REGISTRATION_STATUS-WAITLIST"
+                                                            ),
+                                                        hrbds_cscregionalcampusesid:
+                                                            session_cmb_AssignedRegion.Selected.'CSC Regional Campuses ID',
+                                                        RegionalCampusCode:
+                                                            session_cmb_AssignedRegion.Selected.Code,
+                                                        hrbds_cscdistrictsdivisionsid:
+                                                            session_cmb_AssignedDistrict.Selected.'CSC Districts Divisions ID',
+                                                        DistrictDivisionEN:
+                                                            session_cmb_AssignedDistrict.Selected.EN,
+                                                        DistrictDivisionFR:
+                                                            session_cmb_AssignedDistrict.Selected.FR,
+                                                        AssignedWorkArea:
+                                                            Trim(session_txt_AssignedWorkArea.Text),
+                                                        UpdatedRegistrantFirstName:
+                                                            Self.Selected.GivenName,
+                                                        UpdatedRegistrantLastName:
+                                                            Self.Selected.Surname,
+                                                        UpdatedRegistrantFullName:
+                                                            Upper(Self.Selected.Surname) &
+                                                            ", " &
+                                                            Self.Selected.GivenName,
+                                                        UpdatedRegistrantEmail:
+                                                            Self.Selected.UserPrincipalName
+                                                    }
+                                                ),
+                                                !IsBlank(Self.Selected.UserPrincipalName),
+                                                UpdateIf(
+                                                    locSessionRegistrati0ns,
+                                                    hrbds_csctrainingsessionregistrationid =
+                                                        ThisItem.hrbds_csctrainingsessionregistrationid,
+                                                    {
+                                                        UpdatedRegistrantFirstName:
+                                                            Self.Selected.GivenName,
+                                                        UpdatedRegistrantLastName:
+                                                            Self.Selected.Surname,
+                                                        UpdatedRegistrantFullName:
+                                                            Upper(Self.Selected.Surname) &
+                                                            ", " &
+                                                            Self.Selected.GivenName,
+                                                        UpdatedRegistrantEmail:
+                                                            Self.Selected.UserPrincipalName
+                                                    }
+                                                )
+                                            )
+                                          SearchFields: =["Department"]
+                                          SelectMultiple: =false
+                                          SelectionColor: =myTheme.SelectionText
+                                          SelectionFill: =myTheme.Selection
+                                          Size: =9
+                                          Tooltip: |-
+                                            =Coalesce(
+                                                Self.Selected.UserPrincipalName,
+                                                ThisItem.hrbds_registrantemail
+                                            )
+                                          Width: =Max(150, Parent.TemplateWidth - Self.X - 56)
+                                          X: =session_txt_AssignedWorkArea.X + session_txt_AssignedWorkArea.Width + 8
+                                          Y: =72
+                                    - session_ico_ClearRegistrant:
+                                        Control: Classic/Icon@2.5.0
+                                        Properties:
+                                          AccessibleLabel: =nfBi("Clear registrant", "Effacer le participant")
+                                          Color: =myTheme.Error
+                                          Height: =32
+                                          HoverColor: =myTheme.ErrorHover
+                                          Icon: =Icon.Erase
+                                          OnSelect: |-
+                                            =UpdateIf(
+                                                locSessionRegistrati0ns,
+                                                hrbds_csctrainingsessionregistrationid =
+                                                    ThisItem.hrbds_csctrainingsessionregistrationid,
+                                                {
+                                                    UpdatedRegistrantFirstName: Blank(),
+                                                    UpdatedRegistrantLastName: Blank(),
+                                                    UpdatedRegistrantEmail: Blank(),
+                                                    UpdatedRegistrantFullName: Blank()
+                                                }
+                                            );
+                                            Reset(session_cmb_Registrant)
+                                          PressedColor: =myTheme.ErrorPressed
+                                          TabIndex: =0
+                                          Tooltip: =nfBi("Clear registrant", "Effacer le participant")
+                                          Visible: |-
+                                            =!IsBlank(session_cmb_Registrant.Selected.PrimaryDisplayText) &&
+                                            locTrainingSessionRecord.'Registration Period End Date' >= Today()
+                                          Width: =32
+                                          X: =Parent.TemplateWidth - 40
+                                          Y: =73
+                              - session_con_RegistrationEmpty:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: AutoLayout
+                                  Properties:
+                                    DropShadow: =DropShadow.None
+                                    Fill: =myTheme.InformationBackground
+                                    FillPortions: =1
+                                    LayoutAlignItems: =LayoutAlignItems.Center
+                                    LayoutDirection: =LayoutDirection.Vertical
+                                    LayoutGap: =8
+                                    LayoutJustifyContent: =LayoutJustifyContent.Center
+                                    LayoutMinHeight: =160
+                                    LayoutMinWidth: =0
+                                    RadiusBottomLeft: =10
+                                    RadiusBottomRight: =10
+                                    RadiusTopLeft: =10
+                                    RadiusTopRight: =10
+                                    Visible: =session_gal_Registrations.AllItemsCount = 0
+                                  Children:
+                                    - session_ico_RegistrationEmpty:
+                                        Control: Classic/Icon@2.5.0
+                                        Properties:
+                                          AccessibleLabel: =nfBi("No registrations found", "Aucune inscription trouvée")
+                                          Color: =myTheme.InformationBackgroundText
+                                          Height: =44
+                                          HoverColor: =myTheme.InformationBackgroundText
+                                          Icon: =Icon.People
+                                          LayoutMinHeight: =44
+                                          LayoutMinWidth: =44
+                                          PressedColor: =myTheme.InformationBackgroundText
+                                          TabIndex: =0
+                                          Tooltip: =nfBi("No registrations found", "Aucune inscription trouvée")
+                                          Width: =44
+                                    - session_lbl_RegistrationEmpty:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          Align: =Align.Center
+                                          Color: =myTheme.InformationBackgroundText
+                                          Fill: =myTheme.Transparent
+                                          Font: =Font.Lato
+                                          FontWeight: =FontWeight.Semibold
+                                          Height: =60
+                                          LayoutMinHeight: =60
+                                          LayoutMinWidth: =200
+                                          Size: =10
+                                          Text: |-
+                                            =If(
+                                                locSessionSelectedView = "WAITLIST",
+                                                nfBi(
+                                                    "No employees are currently on the waitlist.",
+                                                    "Aucun employé ne figure actuellement sur la liste d'attente."
+                                                ),
+                                                nfBi(
+                                                    "No seats were found for the districts you can access. Contact the coordinator to request seats.",
+                                                    "Aucune place n'a été trouvée pour les districts auxquels vous avez accès. Communiquez avec le coordonnateur pour demander des places."
+                                                )
+                                            )
+                                          Width: =Min(560, Parent.Width - 40)
+                              - session_con_Actions:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: AutoLayout
+                                  Properties:
+                                    DropShadow: =DropShadow.None
+                                    Fill: =myTheme.Transparent
+                                    FillPortions: =0
+                                    Height: =52
+                                    LayoutAlignItems: =LayoutAlignItems.Center
+                                    LayoutDirection: =LayoutDirection.Horizontal
+                                    LayoutGap: =10
+                                    LayoutJustifyContent: =LayoutJustifyContent.End
+                                    LayoutMinHeight: =52
+                                    LayoutMinWidth: =0
+                                    Visible: |-
+                                      =CountIf(
+                                          locSessionRegistrati0ns As _record,
+                                          Lower(Trim(_record.hrbds_registrantemail)) <>
+                                              Lower(Trim(_record.UpdatedRegistrantEmail)) ||
+                                          _record.hrbds_cscdistrictsdivisionsid <>
+                                              _record.OriginalDistrictDivisionID ||
+                                          _record.AssignedWorkArea <>
+                                              _record.OriginalAssignedWorkArea
+                                      ) > 0
+                                  Children:
+                                    - session_btn_ReloadRegistrations:
+                                        Control: Classic/Button@2.2.0
+                                        Properties:
+                                          BorderColor: =myTheme.Secondary
+                                          BorderStyle: =BorderStyle.Solid
+                                          BorderThickness: =2
+                                          Color: =myTheme.Secondary
+                                          Fill: =myTheme.Transparent
+                                          FocusedBorderColor: =myTheme.Focus
+                                          FocusedBorderThickness: =2
+                                          Font: =Font.Lato
+                                          FontWeight: =FontWeight.Bold
+                                          Height: =40
+                                          HoverBorderColor: =myTheme.SecondaryHover
+                                          HoverColor: =myTheme.SecondaryText
+                                          HoverFill: =myTheme.SecondaryHover
+                                          LayoutMinHeight: =40
+                                          LayoutMinWidth: =110
+                                          OnSelect: |-
+                                            =ClearCollect(
+                                                locSessionRegistrati0ns,
+                                                AddColumns(
+                                                    ForAll(
+                                                        Table(
+                                                            ParseJSON(
+                                                                CSCFetchXMLQuery.Run(
+                                                                    "hrbds_csctrainingsessionregistrations",
+                                                                    "<fetch mapping='logical'> /
+                                            </fetch>"
+                                                                ).queryresults
+                                                            )
+                                                        ),
+                                                        {
+                                                            hrbds_csctrainingsessionregistrationid:
+                                                                GUID(ThisRecord.Value.hrbds_csctrainingsessionregistrationid),
+                                                            modifiedon:
+                                                                DateTimeValue(ThisRecord.Value.modifiedon),
+                                                            hrbds_cscregionalcampusesid:
+                                                                GUID(ThisRecord.Value._hrbds_regionalcampuscode_value),
+                                                            OriginalRegionalCampusCode:
+                                                                Text(ThisRecord.Value.'Region.hrbds_code'),
+                                                            RegionalCampusCode:
+                                                                Text(ThisRecord.Value.'Region.hrbds_code'),
+                                                            RegionalCampusEN:
+                                                                Text(ThisRecord.Value.'Region.hrbds_nameen'),
+                                                            RegionalCampusFR:
+                                                                Text(ThisRecord.Value.'Region.hrbds_namefr'),
+                                                            OriginalDistrictDivisionID:
+                                                                GUID(ThisRecord.Value._hrbds_districtdivisioncode_value),
+                                                            OriginalDistrictDivisionEN:
+                                                                Text(ThisRecord.Value.'DistrictDivision.hrbds_nameen'),
+                                                            OriginalDistrictDivisionFR:
+                                                                Text(ThisRecord.Value.'DistrictDivision.hrbds_namefr'),
+                                                            hrbds_cscdistrictsdivisionsid:
+                                                                GUID(ThisRecord.Value._hrbds_districtdivisioncode_value),
+                                                            DistrictDivisionEN:
+                                                                Text(ThisRecord.Value.'DistrictDivision.hrbds_nameen'),
+                                                            DistrictDivisionFR:
+                                                                Text(ThisRecord.Value.'DistrictDivision.hrbds_namefr'),
+                                                            OriginalAssignedWorkArea:
+                                                                Text(ThisRecord.Value.hrbds_assignedworkarea),
+                                                            AssignedWorkArea:
+                                                                Text(ThisRecord.Value.hrbds_assignedworkarea),
+                                                            hrbds_registrationstatuslookupcode:
+                                                                GUID(ThisRecord.Value._hrbds_registrationstatuslookupcode_value),
+                                                            hrbds_registrantemail:
+                                                                Text(ThisRecord.Value.hrbds_registrantemail),
+                                                            hrbds_registrantfirstname:
+                                                                Text(ThisRecord.Value.hrbds_registrantfirstname),
+                                                            hrbds_registrantlastname:
+                                                                Text(ThisRecord.Value.hrbds_registrantlastname),
+                                                            hrbds_registrantfullname:
+                                                                Text(ThisRecord.Value.hrbds_registrantfullname),
+                                                            UpdatedRegistrantEmail:
+                                                                Text(ThisRecord.Value.hrbds_registrantemail),
+                                                            UpdatedRegistrantFirstName:
+                                                                Text(ThisRecord.Value.hrbds_registrantfirstname),
+                                                            UpdatedRegistrantLastName:
+                                                                Text(ThisRecord.Value.hrbds_registrantlastname),
+                                                            UpdatedRegistrantFullName:
+                                                                Text(ThisRecord.Value.hrbds_registrantfullname)
+                                                        }
+                                                    ) As _source,
+                                                    RegistrationStatus,
+                                                        LookUp(
+                                                            nfLookups,
+                                                            hrbds_csclookupsid =
+                                                                _source.hrbds_registrationstatuslookupcode
+                                                        )
+                                                )
+                                            );
+                                            UpdateContext(
+                                                {
+                                                    locSessionRefreshedAt: Now(),
+                                                    locSessionSelectedRegistration: Blank()
+                                                }
+                                            )
+                                          PressedBorderColor: =myTheme.SecondaryPressed
+                                          PressedColor: =myTheme.SecondaryText
+                                          PressedFill: =myTheme.SecondaryPressed
+                                          RadiusBottomLeft: =8
+                                          RadiusBottomRight: =8
+                                          RadiusTopLeft: =8
+                                          RadiusTopRight: =8
+                                          Size: =10
+                                          Text: =nfBi("Undo changes", "Annuler les changements")
+                                          Tooltip: =nfBi("Reload registrations and discard local changes", "Recharger les inscriptions et annuler les changements locaux")
+                                          Width: =140
+                                    - session_btn_SaveRegistrations:
+                                        Control: Classic/Button@2.2.0
+                                        Properties:
+                                          BorderColor: =myTheme.Primary
+                                          BorderStyle: =BorderStyle.Solid
+                                          BorderThickness: =1
+                                          Color: =myTheme.PrimaryText
+                                          Fill: =myTheme.Primary
+                                          FocusedBorderColor: =myTheme.Focus
+                                          FocusedBorderThickness: =2
+                                          Font: =Font.Lato
+                                          FontWeight: =FontWeight.Bold
+                                          Height: =40
+                                          HoverBorderColor: =myTheme.PrimaryHover
+                                          HoverColor: =myTheme.PrimaryText
+                                          HoverFill: =myTheme.PrimaryHover
+                                          LayoutMinHeight: =40
+                                          LayoutMinWidth: =110
+                                          OnSelect: |-
+                                            =Refresh('CSC Training Session Registrations');
+                                            With(
+                                                {
+                                                    _registeredStatus:
+                                                        LookUp(
+                                                            'CSC Lookups',
+                                                            'Mapping Code' =
+                                                                "REGISTRATION_STATUS-REGISTERED"
+                                                        ),
+                                                    _assignedStatus:
+                                                        LookUp(
+                                                            'CSC Lookups',
+                                                            'Mapping Code' =
+                                                                "REGISTRATION_STATUS-ASSIGNED"
+                                                        ),
+                                                    _waitlistStatus:
+                                                        LookUp(
+                                                            'CSC Lookups',
+                                                            'Mapping Code' =
+                                                                "REGISTRATION_STATUS-WAITLIST"
+                                                        ),
+                                                    _changes:
+                                                        AddColumns(
+                                                            Filter(
+                                                                locSessionRegistrati0ns As _record,
+                                                                Lower(Trim(_record.hrbds_registrantemail)) <>
+                                                                    Lower(Trim(_record.UpdatedRegistrantEmail)) ||
+                                                                _record.hrbds_cscdistrictsdivisionsid <>
+                                                                    _record.OriginalDistrictDivisionID ||
+                                                                _record.AssignedWorkArea <>
+                                                                    _record.OriginalAssignedWorkArea
+                                                            ) As _local,
+                                                            DBModifiedOn,
+                                                                LookUp(
+                                                                    'CSC Training Session Registrations',
+                                                                    'CSC Training Session Registration ID' =
+                                                                        _local.hrbds_csctrainingsessionregistrationid,
+                                                                    'Modified On'
+                                                                ),
+                                                            AssignedAreaDisplayText,
+                                                                _local.RegionalCampusCode &
+                                                                " " &
+                                                                Coalesce(
+                                                                    nfBi(
+                                                                        _local.DistrictDivisionEN,
+                                                                        _local.DistrictDivisionFR
+                                                                    ),
+                                                                    "zzzz"
+                                                                )
+                                                        )
+                                                },
+                                                Patch(
+                                                    'CSC Training Session Registrations',
+                                                    ForAll(
+                                                        Filter(
+                                                            _changes,
+                                                            IsBlank(modifiedon) ||
+                                                            modifiedon = DBModifiedOn
+                                                        ) As _change,
+                                                        {
+                                                            'CSC Training Session Registration ID':
+                                                                _change.hrbds_csctrainingsessionregistrationid,
+                                                            'Training Session':
+                                                                locTrainingSessionRecord,
+                                                            'Assigned Region':
+                                                                LookUp(
+                                                                    'CSC Regional Campuses',
+                                                                    'CSC Regional Campuses ID' =
+                                                                        _change.hrbds_cscregionalcampusesid
+                                                                ),
+                                                            'Assigned District Division':
+                                                                LookUp(
+                                                                    'CSC Districts Divisions',
+                                                                    'CSC Districts Divisions ID' =
+                                                                        _change.hrbds_cscdistrictsdivisionsid
+                                                                ),
+                                                            'Assigned Work Area':
+                                                                _change.AssignedWorkArea,
+                                                            'Registrant First Name':
+                                                                _change.UpdatedRegistrantFirstName,
+                                                            'Registrant Last Name':
+                                                                _change.UpdatedRegistrantLastName,
+                                                            'Registrant Email':
+                                                                _change.UpdatedRegistrantEmail,
+                                                            'Registration Status':
+                                                                If(
+                                                                    _change.RegistrationStatus.hrbds_mappingcode =
+                                                                        "REGISTRATION_STATUS-WAITLIST",
+                                                                    _waitlistStatus,
+                                                                    !IsBlank(_change.UpdatedRegistrantEmail),
+                                                                    _registeredStatus,
+                                                                    _assignedStatus
+                                                                ),
+                                                            Status:
+                                                                If(
+                                                                    _change.RegistrationStatus.hrbds_mappingcode =
+                                                                        "REGISTRATION_STATUS-WAITLIST" &&
+                                                                    IsBlank(_change.UpdatedRegistrantEmail),
+                                                                    'Status (CSC Training Session Registrations)'.Inactive,
+                                                                    'Status (CSC Training Session Registrations)'.Active
+                                                                )
+                                                        }
+                                                    )
+                                                );
+                                                If(
+                                                    CountIf(
+                                                        _changes,
+                                                        modifiedon <> DBModifiedOn
+                                                    ) > 0,
+                                                    Notify(
+                                                        nfBi(
+                                                            "Some records were changed by another user and were not saved. Reload the data and try again.",
+                                                            "Certains enregistrements ont été modifiés par un autre utilisateur et n'ont pas été sauvegardés. Rechargez les données et réessayez."
+                                                        ),
+                                                        NotificationType.Error
+                                                    );
+                                                    ForAll(
+                                                        SortByColumns(
+                                                            Filter(
+                                                                _changes,
+                                                                modifiedon <> DBModifiedOn
+                                                            ),
+                                                            locSortCourseListColumn,
+                                                            locSortType
+                                                        ),
+                                                        Notify(
+                                                            nfBi(
+                                                                "Unsaved: ",
+                                                                "Non sauvegardé : "
+                                                            ) &
+                                                            UpdatedRegistrantFullName &
+                                                            " (" &
+                                                            AssignedAreaDisplayText &
+                                                            ")",
+                                                            NotificationType.Warning
+                                                        )
+                                                    ),
+                                                    Notify(
+                                                        nfBi(
+                                                            "Changes saved successfully.",
+                                                            "Les changements ont été sauvegardés."
+                                                        ),
+                                                        NotificationType.Success,
+                                                        2000
+                                                    )
+                                                )
+                                            );
+                                            Select(session_btn_ReloadRegistrations);
+                                            fnUpdateRegistrationCounts()
+                                          PressedBorderColor: =myTheme.PrimaryPressed
+                                          PressedColor: =myTheme.PrimaryText
+                                          PressedFill: =myTheme.PrimaryPressed
+                                          RadiusBottomLeft: =8
+                                          RadiusBottomRight: =8
+                                          RadiusTopLeft: =8
+                                          RadiusTopRight: =8
+                                          Size: =10
+                                          Text: =nfBi("Save changes", "Sauvegarder")
+                                          Tooltip: =nfBi("Save registration changes", "Sauvegarder les changements aux inscriptions")
+                                          Width: =140
+                  - session_con_Footer:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        DropShadow: =DropShadow.None
+                        Fill: =myTheme.Surface
+                        FillPortions: =0
+                        Height: =38
+                        LayoutAlignItems: =LayoutAlignItems.Center
+                        LayoutDirection: =LayoutDirection.Horizontal
+                        LayoutGap: =8
+                        LayoutMinHeight: =38
+                        LayoutMinWidth: =0
+                        PaddingLeft: =12
+                        PaddingRight: =12
+                        RadiusBottomLeft: =10
+                        RadiusBottomRight: =10
+                        RadiusTopLeft: =10
+                        RadiusTopRight: =10
+                      Children:
+                        - session_lbl_RefreshStatus:
+                            Control: Label@2.5.1
+                            Properties:
+                              Color: =myTheme.TextMuted
+                              Fill: =myTheme.Transparent
+                              FillPortions: =1
+                              Font: =Font.Lato
+                              Height: =28
+                              LayoutMinHeight: =28
+                              LayoutMinWidth: =120
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =9
+                              Text: |-
+                                =nfBi(
+                                    "Registrations refreshed ",
+                                    "Inscriptions actualisées "
+                                ) &
+                                Text(
+                                    locSessionRefreshedAt,
+                                    If(
+                                        ShowFrench,
+                                        "[$-fr-CA]yyyy-mm-dd HH:mm",
+                                        "[$-en-CA]yyyy-mm-dd HH:mm"
+                                    )
+                                )
+                        - session_lbl_CurrentUser:
+                            Control: Label@2.5.1
+                            Properties:
+                              Align: =Align.Right
+                              Color: =myTheme.TextMuted
+                              Fill: =myTheme.Transparent
+                              Font: =Font.Lato
+                              FontWeight: =FontWeight.Semibold
+                              Height: =28
+                              LayoutMinHeight: =28
+                              LayoutMinWidth: =180
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =9
+                              Text: =nfBi("Current user: ", "Utilisateur actuel : ") & User().FullName
