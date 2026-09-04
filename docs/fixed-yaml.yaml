@@ -1187,10 +1187,6 @@ Screens:
                                                 PaddingLeft: =6
                                                 PaddingRight: =6
                                                 PaddingTop: =0
-                                                RadiusBottomLeft: =6
-                                                RadiusBottomRight: =6
-                                                RadiusTopLeft: =6
-                                                RadiusTopRight: =6
                                                 Size: =9
                                                 Text: =ThisItem.'Coordinating Regional Campus'.Code
                                                 Width: =72
@@ -1209,10 +1205,6 @@ Screens:
                                                 PaddingLeft: =6
                                                 PaddingRight: =6
                                                 PaddingTop: =0
-                                                RadiusBottomLeft: =6
-                                                RadiusBottomRight: =6
-                                                RadiusTopLeft: =6
-                                                RadiusTopRight: =6
                                                 Size: =9
                                                 Text: =ThisItem.Course.Code
                                                 Width: =90
@@ -1231,10 +1223,6 @@ Screens:
                                                 PaddingLeft: =4
                                                 PaddingRight: =4
                                                 PaddingTop: =0
-                                                RadiusBottomLeft: =6
-                                                RadiusBottomRight: =6
-                                                RadiusTopLeft: =6
-                                                RadiusTopRight: =6
                                                 Size: =9
                                                 Text: |-
                                                   =Switch(
@@ -1411,10 +1399,6 @@ Screens:
                                                 PaddingLeft: =8
                                                 PaddingRight: =8
                                                 PaddingTop: =0
-                                                RadiusBottomLeft: =6
-                                                RadiusBottomRight: =6
-                                                RadiusTopLeft: =6
-                                                RadiusTopRight: =6
                                                 Size: =9
                                                 Text: |-
                                                   =With(
@@ -1790,10 +1774,6 @@ Screens:
                                                 PaddingLeft: =8
                                                 PaddingRight: =8
                                                 PaddingTop: =0
-                                                RadiusBottomLeft: =6
-                                                RadiusBottomRight: =6
-                                                RadiusTopLeft: =6
-                                                RadiusTopRight: =6
                                                 Size: =9
                                                 Text: =varSelectedTrainingSession.Course.Code
                                                 Width: =100
@@ -1812,10 +1792,6 @@ Screens:
                                                 PaddingLeft: =8
                                                 PaddingRight: =8
                                                 PaddingTop: =0
-                                                RadiusBottomLeft: =6
-                                                RadiusBottomRight: =6
-                                                RadiusTopLeft: =6
-                                                RadiusTopRight: =6
                                                 Size: =9
                                                 Text: =varSelectedTrainingSession.'Coordinating Regional Campus'.Code
                                                 Width: =90
@@ -2316,10 +2292,6 @@ Screens:
                                                 PaddingLeft: =8
                                                 PaddingRight: =8
                                                 PaddingTop: =0
-                                                RadiusBottomLeft: =6
-                                                RadiusBottomRight: =6
-                                                RadiusTopLeft: =6
-                                                RadiusTopRight: =6
                                                 Size: =9
                                                 Text: |-
                                                   =With(
@@ -2694,10 +2666,6 @@ Screens:
                                                 PaddingLeft: =6
                                                 PaddingRight: =6
                                                 PaddingTop: =0
-                                                RadiusBottomLeft: =6
-                                                RadiusBottomRight: =6
-                                                RadiusTopLeft: =6
-                                                RadiusTopRight: =6
                                                 Size: =9
                                                 Text: =Coalesce(ThisItem.RegionalCampusCode, "–")
                                                 Width: =70
@@ -2740,10 +2708,6 @@ Screens:
                                                 PaddingLeft: =6
                                                 PaddingRight: =6
                                                 PaddingTop: =0
-                                                RadiusBottomLeft: =6
-                                                RadiusBottomRight: =6
-                                                RadiusTopLeft: =6
-                                                RadiusTopRight: =6
                                                 Size: =9
                                                 Text: |-
                                                   =If(
@@ -3618,4 +3582,5 @@ Screens:
                               PaddingRight: =0
                               PaddingTop: =0
                               Size: =9
-                              Text: =nfBi("Current user: ", "Utilisateur actuel : ") & User().FullName
+                              Text: |-
+                                =nfBi("Current user: ", "Utilisateur actuel : ") & User().FullName
